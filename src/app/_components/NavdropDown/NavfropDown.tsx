@@ -31,7 +31,7 @@ export function DropdownMenuBasic({logout, isAppearMd}: {logout: any, isAppearMd
           <DropdownMenuGroup >
             <DropdownMenuItem className="pr-3 pl-2"><Link href={'/profile'}>Profile</Link></DropdownMenuItem>
             <DropdownMenuItem className="pr-3 pl-2"><Link href={'/wishlist'}>Wishlist</Link></DropdownMenuItem>
-            <DropdownMenuItem className="pr-3 pl-2"><Link href={'/orders'}>Orders</Link></DropdownMenuItem>
+            <DropdownMenuItem className="pr-3 pl-2"><Link href={'/allorders'}>Orders</Link></DropdownMenuItem>
             <DropdownMenuItem className="pr-3 pl-2" ><span className="hover:text-red-600 transition-colors "  onClick={logout}>Logout</span></DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
