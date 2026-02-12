@@ -16,7 +16,7 @@ import { applyCoupon } from '../_servecies/cart/apply_coupon';
 
 
 export default function Cart() {
-  const couponRef = useRef(null)
+  const couponRef = useRef<HTMLInputElement>(null)
   const quaryclient = useQueryClient()
   const {data , isError , error , isLoading}=useQuery<CartResponse>({
     queryFn:async()=>{
