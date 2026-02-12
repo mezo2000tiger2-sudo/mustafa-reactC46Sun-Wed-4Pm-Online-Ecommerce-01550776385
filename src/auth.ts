@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { FaildLogin, SuccessLogin } from './app/_type/AuthInterface'
 
 export  const authOptions:NextAuthOptions={
+    secret: process.env.NEXTAUTH_SECRET,
     pages:{
         signIn:'/login'
     },

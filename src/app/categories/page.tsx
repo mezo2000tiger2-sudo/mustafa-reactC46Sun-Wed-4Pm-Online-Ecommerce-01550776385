@@ -28,7 +28,7 @@ export default async function categories() {
         {categories?.map((category: any) => (
           
           <div key={category._id} className="bg-white rounded-lg shadow-sm overflow-hidden p-4">
-            <Link href={`categories/${category._id}`} >
+            <Link href={`/categories/${category._id}`} >
             <Image src={category.image} alt={category.name} width={200} height={200} className='object-contain w-full h-40' />
             <h2 className='text-center'>{category.name}</h2>
           </Link>
