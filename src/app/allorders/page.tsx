@@ -63,17 +63,15 @@ export default  function Orders() {
               Total: {order.totalOrderPrice} EGP
             </p>
           </div>
-          <div className="flex gap-2">
-            <img 
-              src={order.cartItems[0].product.imageCover} 
-              alt="Product" 
-              className="w-24 h-24 object-cover rounded-md border border-slate-200"
-            />
-            <img 
-              src={order.cartItems[1].product.imageCover} 
-              alt="Product" 
-              className="w-24 h-24 object-cover rounded-md border border-slate-200"
-            />
+          <div className="flex gap-2 overflow-hidden">
+            {order.cartItems.slice(0, 2).map((item, index) => (
+              <img 
+                key={index}
+                src={item.product.imageCover} 
+                alt="Product" 
+                className="w-24 h-24 object-cover rounded-md border border-slate-200"
+              />
+            ))}
           </div>
         </div>
       </CardContent>
