@@ -4,7 +4,10 @@ import { cookies } from 'next/headers'
 import React from 'react'
 
 export default async function AllOrders() {
-  const authToken = (await cookies()).get('next-auth.session-token')?.value
+  const cookieStore = await cookies()
+  const authToken = cookieStore.get('__Secure-next-auth.session-token')?.value || 
+                    cookieStore.get('next-auth.session-token')?.value
+  
   const token = await decode({
     token: authToken,
     secret: process.env.NEXTAUTH_SECRET!

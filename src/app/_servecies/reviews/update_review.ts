@@ -4,7 +4,14 @@ import { cookies } from 'next/headers';
 import React from 'react'
 
 export async function updateReview({reviewId ,review , rating }:{reviewId:string ,review:string , rating:number}) {
-    const authToken = (await cookies()).get('next-auth.session-token')?.value
+    const cookieStore = await cookies()
+    const authToken = cookieStore.get('__Secure-next-auth.session-token')?.value || 
+                      cookieStore.get('next-auth.session-token')?.value
+    
+    if (!authToken) {
+        return { message: 'fail', errors: { msg: 'You are not logged in' } }
+    }
+    
     const token =await decode({
         token:authToken,
         secret:process.env.NEXTAUTH_SECRET!

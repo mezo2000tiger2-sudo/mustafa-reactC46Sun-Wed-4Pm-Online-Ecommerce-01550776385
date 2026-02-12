@@ -8,14 +8,17 @@ import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 
 export default async function profile() {
-    const authToken = (await cookies()).get('next-auth.session-token')?.value
-            const token =await decode({
-                token:authToken,
-                secret:process.env.NEXTAUTH_SECRET!
-            })
-            const user = token?.user
-            const userToken = token?.token
-            console.log(user);
+    const cookieStore = await cookies()
+    const authToken = cookieStore.get('__Secure-next-auth.session-token')?.value || 
+                      cookieStore.get('next-auth.session-token')?.value
+    
+    const token =await decode({
+        token:authToken,
+        secret:process.env.NEXTAUTH_SECRET!
+    })
+    const user = token?.user
+    const userToken = token?.token
+    console.log(user);
   return (
    <>
    <div className="min-h-screen bg-main pt-16 px-4 pb-8">
