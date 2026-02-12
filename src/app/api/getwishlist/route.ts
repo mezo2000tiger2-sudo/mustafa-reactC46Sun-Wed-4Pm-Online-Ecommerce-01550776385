@@ -8,7 +8,7 @@ export async function GET(req:NextRequest){
 
     }
     try {
-        const resp=await fetch(`${process.env.API}/wishlist`,{
+        const resp=await fetch(`https://ecommerce.routemisr.com/api/v1/wishlist`,{
         method:'GET',
         headers:{
             token:token?.token,
