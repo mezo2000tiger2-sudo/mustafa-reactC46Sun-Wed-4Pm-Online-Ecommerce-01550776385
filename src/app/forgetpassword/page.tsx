@@ -52,29 +52,35 @@ export default function forgetpassword() {
   async function submitForm(values:zod.infer<typeof forgetPasswordShema>){
     setisLoading(true)
     console.log(values);
-    const resp =await fetch(`https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords`,{
-      method:'POST',
-
-      body:JSON.stringify({       
-        email:values.email,
-
-      }),
-
-      headers:{
-        'Content-type':'application/json'
-      }
-    })
-    const data =await resp.json()
-    if(data.statusMsg == 'success'){
-      router.push('/verefyresetcode')
-      toast.success(data.message)
+    try {
+      const resp =await fetch(`https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords`,{
+        method:'POST',
+        body:JSON.stringify({       
+          email:values.email,
+        }),
+        headers:{
+          'Content-type':'application/json'
+        }
+      })
       
-    }else{
+      if (!resp.ok) {
+        toast.error('Server error. Please try again later.')
+        setisLoading(false)
+        return
+      }
+      
+      const data =await resp.json()
+      if(data.statusMsg == 'success'){
+        router.push('/verefyresetcode')
+        toast.success(data.message)
+      }else{
         toast.error(data.message)    
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Network error. Please check your connection and try again.')
     }
     setisLoading(false)
-    
-
   }
 
   return <>
