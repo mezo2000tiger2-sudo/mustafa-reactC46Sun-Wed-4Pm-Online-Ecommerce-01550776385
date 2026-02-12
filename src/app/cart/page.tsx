@@ -26,7 +26,11 @@ export default function Cart() {
     },
     queryKey:['get-cart']
   })
-  localStorage.setItem('cart' , JSON.stringify(data))
+  useEffect(() => {
+    if (data) {
+      localStorage.setItem('cart' , JSON.stringify(data))
+    }
+  }, [data])
   
   const {   mutate:delCartItem} =useMutation({
     mutationKey:['del-item-cart'],
