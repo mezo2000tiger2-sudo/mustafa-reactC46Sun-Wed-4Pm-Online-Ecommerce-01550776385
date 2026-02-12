@@ -6,8 +6,18 @@ import Image from "next/image";
 
 export default async function BrandProducts({params}: {params: {id: string}}) {
     const {id}=await params
-  const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?brand=${id}`)
-  const {data}:{data : ProductInterface[]} = await resp.json()
+  let data: ProductInterface[] = [];
+  try {
+    const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?brand=${id}`)
+    if (resp.ok) {
+      const payload = await resp.json()
+      data = payload.data
+    } else {
+      console.error('Failed to fetch brand products:', resp.statusText)
+    }
+  } catch (err) {
+    console.error('Error fetching brand products:', err)
+  }
   console.log('data', data);
   
   return (

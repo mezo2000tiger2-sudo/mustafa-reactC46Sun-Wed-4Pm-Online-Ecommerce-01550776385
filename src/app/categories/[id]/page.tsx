@@ -6,8 +6,18 @@ import Image from "next/image";
 
 export default async function CategoryProducts({params}: {params: {id: string}}) {
     const {id}=await params
-  const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?category=${id}`)
-  let data: ProductInterface[] = await resp.json()
+  let data: ProductInterface[] = [];
+  try {
+    const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?category=${id}`)
+    if (resp.ok) {
+      const payload = await resp.json()
+      data = payload.data
+    } else {
+      console.error('Failed to fetch category products:', resp.statusText)
+    }
+  } catch (err) {
+    console.error('Error fetching category products:', err)
+  }
   
   return (
     <>

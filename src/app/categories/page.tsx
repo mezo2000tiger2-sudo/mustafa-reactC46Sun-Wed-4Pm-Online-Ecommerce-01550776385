@@ -9,10 +9,19 @@ export const metadata: Metadata = {
 };
 
 export default async function categories() {
-  const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories')
+  let categories:Category[] = []
+  try {
+    const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories')
+    if (resp.ok) {
       const payload = await resp.json()
-      const categories:Category[] = payload?.data
-      console.log(categories);
+      categories = payload?.data
+    } else {
+      console.error('Failed to fetch categories:', resp.statusText)
+    }
+  } catch (err) {
+    console.error('Error fetching categories:', err)
+  }
+  console.log(categories);
   return (
     <div className="bg-main min-h-screen p-4">
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-7'>
