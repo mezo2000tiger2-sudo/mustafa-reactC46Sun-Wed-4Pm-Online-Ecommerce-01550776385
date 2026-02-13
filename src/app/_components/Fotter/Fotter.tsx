@@ -13,8 +13,8 @@ export default function Fotter() {
         <p className='text-gray-500 text-lg'>We will send you a link, open it to install the app</p>
        </div>
        <div className='flex justify-between items-center gap-2'>
-        <Input className='w-5/6 bg-white' placeholder='Email...'></Input>
-        <Button className='w-1/6'>Share app link</Button>
+        <Input className='md:w-5/6 w-4/6 bg-white' placeholder='Email...'></Input>
+        <Button className='md:w-1/6 w-2/6'>Share</Button>
        </div>
        <div className='flex justify-start items-center py-4 border-y border-gray-400 w-full'>
     

@@ -24,8 +24,7 @@ export default async function profile() {
    <div className="min-h-screen bg-main pt-16 px-4 pb-8">
   <div className="max-w-md mx-auto bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl">
     
-    {/* Profile Section */}
-    <div className="pt-12 pb-8 px-8">
+    <div className="pt-12 pb-8 px-2 md:px-8">
       <div className="text-center">
         <div className="relative inline-block mb-6">
           <Image 
@@ -44,8 +43,7 @@ export default async function profile() {
           {user.email}
         </p>
 
-        {/* Updates Card */}
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl md:p-6 p-2 border border-gray-100 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Updates
           </h2>

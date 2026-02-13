@@ -13,8 +13,18 @@ export default function Slider({ categories }: { categories: Category[] }) {
     <>
       <Swiper
         modules={[Autoplay]}
-        spaceBetween={30}
-        slidesPerView={4}
+        spaceBetween={10}
+        slidesPerView={2}
+        breakpoints={{
+          640: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 30,
+          },
+        }}
         loop={true}
         autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: false }}
       >

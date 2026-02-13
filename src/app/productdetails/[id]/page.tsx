@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
 import { ProductInterface } from '@/app/_type/ProductInterface'
 import ProductImages from '@/app/_components/ProductImages/ProductImages'
 import AddBTN from '@/app/_components/addBTN/addBTN'
@@ -11,10 +10,18 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Loading from '@/app/loading'
 import { verifyToken } from '@/app/_servecies/orders/verifytoken'
-import { Button } from '@/components/ui/button'
 import { UpdateReview } from '@/app/_components/_updateAndDeleteRevie/UpdateReview/UpdateReview'
 import DeleteReview from '@/app/_components/_updateAndDeleteRevie/DeleteReview/DeleteReview'
-
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 type paramsType = {
   params: { id: string }
 }
@@ -150,8 +157,19 @@ useEffect(() => {
                         </div>
                       </div>
                       {  userID && verefy?.decoded?.id==rev.user._id? <div className='flex gap-3 items-center'>
-                        <UpdateReview reviewId={rev._id} id={id}/>
-                        <DeleteReview reviewId={rev._id} id={id}/>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Open</Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuGroup>
+                              <DropdownMenuItem><UpdateReview reviewId={rev._id} id={id}/></DropdownMenuItem>
+                              <DropdownMenuItem><DeleteReview reviewId={rev._id} id={id}/></DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        {/* <UpdateReview reviewId={rev._id} id={id}/> */}
+                        {/* <DeleteReview reviewId={rev._id} id={id}/> */}
                       </div>:<></>}
                       
                     </div>

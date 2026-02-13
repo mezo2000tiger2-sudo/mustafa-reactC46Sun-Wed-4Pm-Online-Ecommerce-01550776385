@@ -41,7 +41,7 @@ export default  function Orders() {
     <>
     <div className='min-h-screen p-4 md:p-10 bg-main'>
       <div className='bg-white p-5 rounded-lg'>
-        <h2 className='text-black text-center text-2xl font-bold mb-5'>My Orders</h2>
+        <h2 className='text-gray-700 text-center text-sm md:text-2xl md:font-bold mb-5'>My Orders</h2>
         {orders?.map((order:Order)=>{ return <Card key={order._id} className="w-full mb-5 hover:shadow-2xl cursor-pointer hover:-translate-y-3 transition-all" onClick={()=>{
           localStorage.setItem('orderDetails', JSON.stringify(order))
           router.push('/orderdetails')
@@ -69,7 +69,7 @@ export default  function Orders() {
                 key={index}
                 src={item.product.imageCover} 
                 alt="Product" 
-                className="w-24 h-24 object-cover rounded-md border border-slate-200"
+                className={`w-16 h-16 md:w-24 md:h-24 object-cover rounded-md border border-slate-200 ${index > 0 ? 'hidden md:block' : ''}`}
               />
             ))}
           </div>

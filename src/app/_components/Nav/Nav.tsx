@@ -32,8 +32,8 @@ export default function Nav() {
   })
 
   const navRef = useRef(null)
-  const mobileMenuRef = useRef(null)
-
+  const mobileMenuRef = useRef<HTMLDivElement>(null)
+  const buttonToggleRef = useRef<HTMLButtonElement>(null)
 
   const path = [
     { href: '/', content: 'Home' },
@@ -101,6 +101,24 @@ export default function Nav() {
     }
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        isOpen && 
+        mobileMenuRef.current && !mobileMenuRef.current.contains(target) &&
+        buttonToggleRef.current && !buttonToggleRef.current.contains(target)
+      ) {
+        setisOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
   return (
     <nav ref={navRef} className="bg-gray-100 w-full sticky top-0 left-0 right-0 z-50">
       <div className={`max-w-7xl px-4 md:px-8 flex flex-wrap md:flex-nowrap items-center justify-between mx-auto transition-all duration-400 ease-out ${navPadding}`}>
@@ -118,6 +136,7 @@ export default function Nav() {
 
         <div className='flex justify-center items-center gap-3 md:hidden'>
           <button
+            ref={buttonToggleRef}
             onClick={() => { setisOpen(!isOpen);  }}
             data-collapse-toggle="navbar-default"
             type="button"
@@ -151,7 +170,7 @@ export default function Nav() {
             {path.map((elm) => {
               return (
                 <li key={elm.content}>
-                  <Link href={elm.href} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
+                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
                     {elm.content}
                   </Link>
                 </li>
@@ -162,7 +181,7 @@ export default function Nav() {
             {status !== 'authenticated' && authPath.map((elm) => {
               return (
                 <li key={elm.content}>
-                  <Link href={elm.href} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
+                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
                     {elm.content}
                   </Link>
                 </li>
