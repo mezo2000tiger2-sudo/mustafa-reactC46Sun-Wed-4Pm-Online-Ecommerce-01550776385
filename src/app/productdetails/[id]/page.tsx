@@ -159,12 +159,20 @@ useEffect(() => {
                       {  userID && verefy?.decoded?.id==rev.user._id? <div className='flex gap-3 items-center'>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline">Open</Button>
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                              </svg>
+                            </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent>
+                          <DropdownMenuContent align="end">
                             <DropdownMenuGroup>
-                              <DropdownMenuItem><UpdateReview reviewId={rev._id} id={id}/></DropdownMenuItem>
-                              <DropdownMenuItem><DeleteReview reviewId={rev._id} id={id}/></DropdownMenuItem>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
+                                <UpdateReview reviewId={rev._id} id={id}/>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
+                                <DeleteReview reviewId={rev._id} id={id}/>
+                              </DropdownMenuItem>
                             </DropdownMenuGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>

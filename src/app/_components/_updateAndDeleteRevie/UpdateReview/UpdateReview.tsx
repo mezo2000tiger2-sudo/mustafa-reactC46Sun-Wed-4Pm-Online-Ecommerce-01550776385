@@ -84,7 +84,7 @@ export function UpdateReview({ reviewId ,id }:{reviewId:string , id:string}) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'} className="hover:bg-blue-500 hover:text-white border border-blue-200">update</Button>
+        <Button variant={'ghost'} className="w-full justify-start hover:bg-blue-100 hover:text-white border-0 rounded-none h-9 px-1">update</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleSubmit} className="space-y-4">
