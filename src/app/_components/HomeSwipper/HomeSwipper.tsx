@@ -40,10 +40,10 @@ export default function HomeSwipper() {
         </div>
         <div className="w-1/4 flex flex-col">
             <div className="w-full h-35 relative">
-            <Image src={BlogIMG1} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg1" fill className="object-cover" priority />
+            <Image src={BlogIMG1} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg1" fill className="object-cover" />
           </div>
             <div className="w-full h-35 relative">
-            <Image src={BlogIMG2} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg2" fill className="object-cover" priority />
+            <Image src={BlogIMG2} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg2" fill className="object-cover" />
           </div>
         </div>
     </div>
