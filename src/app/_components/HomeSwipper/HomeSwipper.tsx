@@ -7,7 +7,6 @@ import sliderIMG2 from '../../../assets/images/slider-image-2.jpeg'
 import sliderIMG3 from '../../../assets/images/slider-image-3.jpeg'
 import BlogIMG1 from '../../../assets/images/blog-img-1.jpeg'
 import BlogIMG2 from '../../../assets/images/blog-img-2.jpeg'
-import 'swiper/css'
 import Image from 'next/image'
 
 export default function HomeSwipper() {
