@@ -17,20 +17,21 @@ export default function HomeSwipper() {
     modules={[Autoplay]}
     slidesPerView={1}
     loop={true}
-      autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: false }}
+    autoplay={{ delay: 3000, disableOnInteraction: false }}
+    watchSlidesProgress={true}
     >
         <SwiperSlide>
-          <div className="w-full h-70 relative">
+          <div className="w-full h-72 relative bg-gray-100">
             <Image src={sliderIMG1} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG1" fill className="object-cover" priority />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="w-full h-70 relative">
+          <div className="w-full h-72 relative bg-gray-100">
             <Image src={sliderIMG2} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG2" fill className="object-cover" />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="w-full h-70 relative">
+          <div className="w-full h-72 relative bg-gray-100">
             <Image src={sliderIMG3} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG3" fill className="object-cover" />
           </div>
         </SwiperSlide>
@@ -38,10 +39,10 @@ export default function HomeSwipper() {
     </Swiper>
         </div>
         <div className="w-1/4 flex flex-col">
-            <div className="w-full h-35 relative">
+            <div className="w-full h-36 relative bg-gray-100">
             <Image src={BlogIMG1} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg1" fill className="object-cover" />
           </div>
-            <div className="w-full h-35 relative">
+            <div className="w-full h-36 relative bg-gray-100">
             <Image src={BlogIMG2} sizes="(max-width: 768px) 25vw, 25vw" alt="blogimg2" fill className="object-cover" />
           </div>
         </div>

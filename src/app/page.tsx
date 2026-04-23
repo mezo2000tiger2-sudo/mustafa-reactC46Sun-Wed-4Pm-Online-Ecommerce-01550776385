@@ -11,7 +11,7 @@ export default function Home() {
       <HomeSwipper />
 
       {/* 2. Streams in when Category API finishes */}
-      <Suspense fallback={<div className="h-40 w-full animate-pulse bg-gray-200/20 mb-6 rounded-sm" />}>
+      <Suspense fallback={<div className="h-44 w-full animate-pulse bg-gray-200/20 mb-6 rounded-sm" />}>
         <CategorySlider />
       </Suspense>
 
