@@ -28,7 +28,7 @@ export default function Slider({ categories }: { categories: Category[] }) {
         loop={true}
         autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: false }}
       >
-        {categories?.map((cat) => (
+        {categories?.map((cat, index) => (
           <SwiperSlide key={cat._id}>
             <div className="w-full h-45 relative rounded-sm overflow-hidden">
               <Link href={`/categories/${cat._id}`} className="block w-full h-full relative">
@@ -37,7 +37,8 @@ export default function Slider({ categories }: { categories: Category[] }) {
                   alt={cat.name}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  priority={index < 4}
                 />
               </Link>
             </div>
