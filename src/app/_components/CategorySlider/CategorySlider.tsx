@@ -3,7 +3,9 @@ import React from 'react'
 import Slider from '../Slider/Slider';
 
 export default async function CategorySlider() {
-    const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories')
+    const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories', {
+        next: { revalidate: 3600 }
+    })
     const payload = await resp.json()
     const categories:Category[] = payload?.data    
   return (

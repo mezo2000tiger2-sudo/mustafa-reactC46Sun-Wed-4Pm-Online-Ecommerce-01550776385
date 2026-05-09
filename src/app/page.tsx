@@ -30,7 +30,9 @@ export default function Home() {
 }
 
 async function ProductList() {
-  const resp = await fetch('https://ecommerce.routemisr.com/api/v1/products')
+  const resp = await fetch('https://ecommerce.routemisr.com/api/v1/products', {
+    next: { revalidate: 3600 }
+  })
   const { data: products }: { data: ProductInterface[] } = await resp.json()
   
   return (

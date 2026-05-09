@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Brands() {
-  const resp = await fetch('https://ecommerce.routemisr.com/api/v1/brands?limit=27')
+  const resp = await fetch('https://ecommerce.routemisr.com/api/v1/brands?limit=27', {
+    next: { revalidate: 3600 }
+  })
   const payload = await resp.json()
   console.log(payload)
   return (

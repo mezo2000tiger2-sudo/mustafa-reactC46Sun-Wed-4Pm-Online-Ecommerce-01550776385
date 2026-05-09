@@ -8,7 +8,9 @@ export default async function BrandProducts({params}: {params: {id: string}}) {
     const {id}=await params
   let data: ProductInterface[] = [];
   try {
-    const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?brand=${id}`)
+    const resp =  await fetch(`https://ecommerce.routemisr.com/api/v1/products?brand=${id}`, {
+        next: { revalidate: 3600 }
+    })
     if (resp.ok) {
       const payload = await resp.json()
       data = payload.data
