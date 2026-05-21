@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 export default async function categories() {
   let categories:Category[] = []
   try {
-    const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories')
+    const resp = await fetch('https://ecommerce.routemisr.com/api/v1/categories', {
+      next: { revalidate: 3600 }
+    })
     if (resp.ok) {
       const payload = await resp.json()
       categories = payload?.data
