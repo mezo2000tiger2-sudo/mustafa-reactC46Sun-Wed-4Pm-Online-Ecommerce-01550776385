@@ -11,6 +11,7 @@ export function useWishlist() {
       if (!resp.ok) throw new Error('Failed to load wishlist')
       return resp.json()
     },
+    refetchInterval: 20000,
     enabled: status === 'authenticated'
   })
 }
