@@ -10,7 +10,6 @@ Freshcart is a modern E-commerce web application built using Next.js 16 and Reac
 - **Authentication:** NextAuth.js 4.24.13
 - **Data Fetching:** TanStack Query (React Query) 5.90.20
 - **Forms:** React Hook Form with Zod validation
-- **Animations:** GSAP 3.14.2
 - **Sliders:** Swiper 12.1.0 & Embla Carousel 8.6.0
 - **UI Components:** Radix UI (Shadcn UI architecture)
 - **Icons:** Lucide React

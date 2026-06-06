@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freshcart — Screen gallery (non-auth)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200..900;1,9..144,200..900&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c1914;
+      --paper: #f6f1e8;
+      --card: rgba(255, 252, 247, 0.88);
+      --line: rgba(28, 25, 20, 0.12);
+      --sage: rgb(14, 133, 40);
+      --sage-soft: color-mix(in oklab, rgb(14, 133, 40) 16%, white);
+      --apricot: color-mix(in oklab, oklch(0.72 0.11 55) 35%, transparent);
+      --shadow: 0 22px 55px rgba(28, 25, 20, 0.12);
+      --radius: 18px;
+      --font-display: "Fraunces", serif;
+      --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background-color: var(--paper);
+      background-image:
+        radial-gradient(1000px 620px at 10% 6%, color-mix(in oklab, var(--sage) 22%, transparent), transparent 58%),
+        radial-gradient(840px 520px at 92% 14%, var(--apricot), transparent 55%),
+        radial-gradient(900px 640px at 52% 104%, color-mix(in oklab, oklch(0.72 0.08 260) 28%, transparent), transparent 60%),
+        linear-gradient(180deg, rgba(255,252,247,0.92), transparent 48%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    body::after {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.07;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");
+      z-index: 9999;
+    }
+
+    .toc-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      background: color-mix(in oklab, var(--paper) 82%, transparent);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 22px 18px;
+    }
+
+    .toc-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    h1.gTitle {
+      font-family: var(--font-display);
+      font-variation-settings: "opsz" 72;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
+      font-size: clamp(1.55rem, 3vw, 2rem);
+    }
+
+    .toc-note {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: color-mix(in oklab, var(--ink) 62%, transparent);
+      max-width: 72ch;
+      line-height: 1.45;
+    }
+
+    nav.toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    nav.toc a {
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 252, 247, 0.55);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+    }
+
+    nav.toc a:hover {
+      transform: translateY(-1px);
+      border-color: color-mix(in oklab, var(--sage) 45%, var(--line));
+      box-shadow: 0 10px 24px rgba(14, 133, 40, 0.12);
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 22px 80px;
+    }
+
+    .screen {
+      margin-bottom: 64px;
+      scroll-margin-top: 120px;
+    }
+
+    .screen-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .screen-label h2 {
+      font-family: var(--font-display);
+      font-variation-settings: "opsz" 64;
+      font-weight: 620;
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .route {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--sage);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--sage-soft);
+      border: 1px solid color-mix(in oklab, var(--sage) 22%, white);
+    }
+
+    .frame {
+      border-radius: calc(var(--radius) + 6px);
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255,252,247,0.55), rgba(255,252,247,0.2));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .mock {
+      background: color-mix(in oklab, var(--paper) 45%, white);
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mock-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 252, 247, 0.65);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+    }
+
+    .logo span { color: var(--sage); }
+
+    .mock-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .mock-links a,
+    .pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid transparent;
+    }
+
+    .mock-links a:hover { background: rgba(14, 133, 40, 0.08); }
+
+    .mock-links a.active {
+      background: var(--sage-soft);
+      border-color: color-mix(in oklab, var(--sage) 25%, white);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 252, 247, 0.8);
+      font-size: 18px;
+    }
+
+    .mock-body {
+      flex: 1;
+      padding: 28px 22px 36px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 520px) {
+      .grid-4 { grid-template-columns: 1fr; }
+      .mock-nav { flex-wrap: wrap; gap: 10px; }
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-visual {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      min-height: 260px;
+      background:
+        linear-gradient(135deg, color-mix(in oklab, var(--sage) 18%, white), transparent 55%),
+        linear-gradient(210deg, var(--apricot), transparent 60%),
+        #e8dfd2;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual .tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid var(--line);
+    }
+
+    .hero-copy h3 {
+      font-family: var(--font-display);
+      font-variation-settings: "opsz" 72;
+      font-weight: 650;
+      font-size: clamp(1.8rem, 3.8vw, 2.65rem);
+      line-height: 1.06;
+      margin: 10px 0 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-copy p {
+      margin: 0 0 18px;
+      max-width: 46ch;
+      line-height: 1.55;
+      color: color-mix(in oklab, var(--ink) 70%, transparent);
+      font-weight: 400;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--sage);
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      padding: 11px 18px;
+      border-radius: 12px;
+      cursor: default;
+      box-shadow: 0 14px 30px rgba(14, 133, 40, 0.25);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 252, 247, 0.75);
+      border: 1px solid var(--line);
+      font-weight: 600;
+      padding: 11px 16px;
+      border-radius: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 0 14px;
+    }
+
+    .section-title h4 {
+      font-family: var(--font-display);
+      font-weight: 620;
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .section-title small {
+      font-size: 12px;
+      color: color-mix(in oklab, var(--ink) 58%, transparent);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(28, 25, 20, 0.07);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgba(28, 25, 20, 0.12);
+    }
+
+    .ph {
+      height: 138px;
+      background:
+        linear-gradient(120deg, #e9dfd2, #d7e9db 48%, #f4e8d9);
+    }
+
+    .card-body {
+      padding: 12px 13px 14px;
+    }
+
+    .brand-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--sage) 12%, white);
+      color: color-mix(in oklab, var(--sage) 55%, black);
+      margin-bottom: 8px;
+    }
+
+    .card-body h5 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .muted { color: color-mix(in oklab, var(--ink) 55%, transparent); font-weight: 500; }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 760px) {
+      .slider-row { grid-template-columns: 1fr; }
+    }
+
+    .swiper-main {
+      height: 210px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(115deg, #dfe9df, #e9ddd0 55%, #d6e8d8);
+    }
+
+    .swiper-side {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .swiper-side div {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(140deg, #eadfd2, #dbe8db);
+    }
+
+    .cats {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .cat {
+      flex: 0 0 auto;
+      width: 112px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .cat .cph {
+      height: 64px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      background: linear-gradient(160deg, #e9e1d8, #d9eadd);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 860px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 18px;
+      box-shadow: 0 12px 32px rgba(28, 25, 20, 0.07);
+    }
+
+    .qty {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fffdf8;
+    }
+
+    .qty button {
+      border: none;
+      background: color-mix(in oklab, var(--paper) 40%, white);
+      padding: 8px 12px;
+      font-weight: 800;
+      cursor: default;
+    }
+
+    .qty span {
+      padding: 8px 14px;
+      font-weight: 700;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .list-card {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .list-card { grid-template-columns: 88px 1fr; }
+    }
+
+    .thumb {
+      height: 88px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #e4ded4, #d7e9db);
+    }
+
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+
+    input.fake {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+
+    .profile-card {
+      max-width: 420px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 999px;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(255,252,247,0.95);
+      box-shadow: 0 14px 30px rgba(28,25,20,0.12);
+      background: radial-gradient(circle at 30% 30%, #f3e9dc, #c9ddcc);
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,252,247,0.75);
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,252,247,0.78);
+      margin-bottom: 10px;
+    }
+
+    /* Checkout preview-only (design) */
+    .preview-banner {
+      font-size: 12px;
+      font-weight: 600;
+      color: color-mix(in oklab, var(--sage) 85%, black);
+      background: var(--sage-soft);
+      border: 1px solid color-mix(in oklab, var(--sage) 28%, var(--line));
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      line-height: 1.45;
+    }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+    }
+    .receipt-box {
+      border-radius: var(--radius);
+      border: 1px dashed var(--line);
+      background: linear-gradient(180deg, rgba(255,252,247,0.95), rgba(246,241,232,0.6));
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .receipt-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 13px;
+      border-bottom: 1px dotted color-mix(in oklab, var(--line) 80%, transparent);
+    }
+    .receipt-line:last-of-type { border-bottom: none; }
+    .mini-prod {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .mini-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #e4ded4, #d7e9db);
+      flex-shrink: 0;
+    }
+    .addr-card {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid var(--line);
+      margin-bottom: 10px;
+      cursor: default;
+      background: rgba(255,252,247,0.85);
+    }
+    .addr-card.selected {
+      border-color: var(--sage);
+      background: color-mix(in oklab, var(--sage-soft) 55%, white);
+      box-shadow: 0 8px 22px rgba(14, 133, 40, 0.12);
+    }
+    .addr-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid var(--line);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .addr-card.selected .addr-dot {
+      border-color: var(--sage);
+      background: radial-gradient(circle, var(--sage) 45%, transparent 46%);
+    }
+    .field-block { margin-bottom: 10px; }
+    .field-block label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: color-mix(in oklab, var(--ink) 72%, transparent);
+      text-transform: lowercase;
+    }
+    .addr-meta {
+      display: grid;
+      gap: 3px;
+      font-size: 12px;
+      color: color-mix(in oklab, var(--ink) 58%, transparent);
+    }
+    .addr-meta span strong {
+      font-weight: 600;
+      color: color-mix(in oklab, var(--ink) 78%, transparent);
+    }
+
+    /* Orders — matches original app card layout */
+    .order-card {
+      background: rgba(255,252,247,0.95);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 28px rgba(28,25,20,0.08);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .order-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(28,25,20,0.12);
+      cursor: pointer;
+    }
+    .order-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px 10px;
+      border-bottom: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
+    }
+    .order-card-head h5 {
+      margin: 0;
+      font-size: clamp(11px, 2vw, 15px);
+      font-weight: 700;
+      color: color-mix(in oklab, var(--ink) 72%, transparent);
+      word-break: break-all;
+    }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: color-mix(in oklab, var(--ink) 8%, white);
+      color: color-mix(in oklab, var(--ink) 70%, transparent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .status-badge.paid {
+      background: color-mix(in oklab, var(--sage) 14%, white);
+      color: color-mix(in oklab, var(--sage) 75%, black);
+    }
+    .order-card-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      padding: 12px 18px 18px;
+    }
+    .order-info {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: color-mix(in oklab, var(--ink) 62%, transparent);
+    }
+    .order-info strong.total {
+      display: block;
+      margin-top: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .order-thumbs {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .order-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      object-fit: cover;
+      background: linear-gradient(135deg, #e4ded4, #d7e9db);
+    }
+    .order-thumb.alt { background: linear-gradient(135deg, #e8d4e0, #dbe8db); }
+
+    /* Order detail page */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: color-mix(in oklab, var(--ink) 62%, transparent);
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+    .detail-card {
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(255,252,247,0.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .detail-card-head {
+      background: color-mix(in oklab, var(--ink) 5%, white);
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .detail-card-head h4 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      word-break: break-all;
+    }
+    .pay-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: white;
+      text-transform: lowercase;
+    }
+    .pay-badge.visa {
+      background: color-mix(in oklab, oklch(0.55 0.12 260) 12%, white);
+      border-color: color-mix(in oklab, oklch(0.55 0.12 260) 30%, var(--line));
+    }
+    .detail-section {
+      padding: 18px 20px;
+    }
+    .detail-section h6 {
+      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: color-mix(in oklab, var(--ink) 68%, transparent);
+    }
+    .customer-box {
+      background: color-mix(in oklab, var(--ink) 4%, white);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #2563eb;
+      color: white;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .customer-box p { margin: 0; font-size: 13px; line-height: 1.45; }
+    .customer-box .name { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .customer-box .muted-line { color: color-mix(in oklab, var(--ink) 58%, transparent); }
+    .ship-box {
+      margin-top: 12px;
+      background: color-mix(in oklab, var(--sage) 6%, white);
+      border: 1px solid color-mix(in oklab, var(--sage) 18%, var(--line));
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      display: grid;
+      gap: 4px;
+    }
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 12px;
+      background: color-mix(in oklab, var(--ink) 4%, white);
+      margin-bottom: 10px;
+    }
+    .order-item-row:last-child { margin-bottom: 0; }
+    .order-item-row .item-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #e4ded4, #d7e9db);
+    }
+    .order-item-row .item-thumb.alt { background: linear-gradient(135deg, #e8d4e0, #dbe8db); }
+    .order-item-row .item-info { flex: 1; min-width: 0; }
+    .order-item-row .item-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 4px;
+    }
+    .order-item-row .item-qty { font-size: 11px; color: color-mix(in oklab, var(--ink) 55%, transparent); margin: 0; }
+    .order-item-row .item-price { font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .detail-divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 0;
+    }
+    .summary-lines {
+      padding: 16px 20px 18px;
+      display: grid;
+      gap: 8px;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: color-mix(in oklab, var(--ink) 62%, transparent);
+    }
+    .summary-line.total {
+      padding-top: 10px;
+      margin-top: 4px;
+      border-top: 1px solid var(--line);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .summary-line.total span:last-child { color: #2563eb; }
+    .payment-footer {
+      padding: 14px 20px 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <!-- <div class="toc-wrap">
+    <div class="toc-inner">
+      <h1 class="gTitle">Freshcart — non-auth screens</h1>
+      <p class="toc-note">
+        Styled per <code>.agents/skills/frontend-design</code> (editorial / warm paper, Fraunces + IBM Plex Sans, grain, asymmetric hero).
+        Stitch MCP is not available here (server error in project MCP metadata); this gallery is your viewable substitute.
+      </p>
+      <div class="toc-note" style="margin-bottom:16px; border-left:3px solid var(--sage); padding-left:12px">
+        <strong style="color:var(--ink)">API Alignment Notes:</strong>
+        <ul style="margin:6px 0 0; padding-left:16px; font-size:12px; display:grid; gap:3px">
+          <li><strong>Cart & Cash Orders (v2):</strong> Both Cart operations (<code>/api/v2/cart</code>) and Cash orders (<code>POST /api/v2/orders/:cartId</code>) use the new v2 endpoints.</li>
+          <li><strong>Checkout:</strong> <code>shippingAddress</code> accepts <code>details</code>, <code>phone</code>, and <code>city</code>. <code>postalCode</code> is required only for Cash (v2 API). <code>name</code> is not accepted.</li>
+          <li><strong>Subcategories:</strong> The category page combines main categories with nested subcategories loaded from <code>GET /api/v1/subcategories?category=&lt;categoryId&gt;&limit=40</code>. Global listing requires <code>GET /api/v1/subcategories?limit=40</code> (endpoint returns 0 results without a limit parameter).</li>
+          <li><strong>Product filtering:</strong> Use <code>GET /api/v1/products?category=&lt;categoryId&gt;&subcategory=&lt;subId&gt;</code> for category + subcategory product views.</li>
+          <li><strong>Reviews (nested & global):</strong> Product detail pages fetch nested reviews (<code>GET /api/v1/products/:id/reviews</code>). Logged-in users can write reviews (<code>POST /api/v1/products/:id/reviews</code>) and update/delete their own reviews using global endpoints (<code>PUT /api/v1/reviews/:reviewId</code> and <code>DELETE /api/v1/reviews/:reviewId</code>).</li>
+          <li><strong>Placeholders included:</strong> empty cart, empty wishlist, saved locations, update password, and update user data screens.</li>
+        </ul>
+      </div>
+      <nav class="toc" aria-label="Jump to screens">
+        <a href="#home">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#category-detail">Category</a>
+        <a href="#brands">Brands</a>
+        <a href="#brand-detail">Brand</a>
+        <a href="#product">Product</a>
+        <a href="#cart">Cart</a>
+        <a href="#checkout">Checkout</a>
+        <a href="#cart-empty">Cart empty</a>
+        <a href="#wishlist-empty">Wishlist empty</a>
+        <a href="#locations">Locations</a>
+        <a href="#locations-empty">Locations empty</a>
+        <a href="#update-password">Update password</a>
+        <a href="#update-user">Update user data</a>
+        <a href="#profile">Profile</a>
+        <a href="#addresses">Addresses</a>
+        <a href="#add-address">Add address</a>
+        <a href="#orders">Orders</a>
+        <a href="#order-detail">Order detail</a>
+        <a href="#wishlist">Wishlist</a>
+      </nav>
+    </div>
+  </div> -->
+
+  <div class="page">
+
+    <!-- Home -->
+    <section class="screen" id="home">
+      <div class="screen-label">
+        <h2>Home</h2>
+        <span class="route">/</span>
+      </div>
+      <div class="frame">
+        <div class="mock">
+          <header class="mock-nav">
+            <div class="logo">Fresh<span>cart</span></div>
+            <div class="mock-links">
+              <a class="active" href="#home">Home</a>
+              <a href="#categories">Categories</a>
+              <a href="#brands">Brands</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="icon-btn" title="Cart">🛒</span>
+            </div>
+          </header>
+          <div class="mock-body">
+            <div class="hero">
+              <div class="hero-visual">
+                <span class="tag">Seasonal picks</span>
+              </div>
+              <div class="hero-copy">
+                <p class="pill" style="display:inline-block;background:rgba(14,133,40,0.1);border:1px solid var(--line);margin:0 0 6px">Farm-traceable · Fast delivery</p>
+                <h3>Groceries with an editorial eye.</h3>
+                <p>Big hero moment, soft paper texture, and a confident green accent—same product data, new atmosphere.</p>
+                <div class="btn-row">
+                  <button type="button" class="btn-primary">Shop produce</button>
+                  <button type="button" class="btn-ghost">Browse deals</button>
+                </div>
+              </div>
+            </div>
+            <div class="slider-row">
+              <div class="swiper-main" aria-hidden="true"></div>
+              <div class="swiper-side"><div></div><div></div></div>
+            </div>
+            <div class="section-title">
+              <h4>Categories</h4>
+              <small>Horizontal rail</small>
+            </div>
+            <div class="cats">
+              <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Dairy</div></div>
+              <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Snacks</div></div>
+              <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Beverages</div></div>
+              <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Care</div></div>
+              <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Household</div></div>
+            </div>
+            <div class="section-title">
+              <h4>Featured products</h4>
+              <small>Grid matches ProductCard layout</small>
+            </div>
+            <div class="grid-4">
+              <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Brand</span><h5>Whole milk 1L</h5><div class="meta"><span>49 EGP</span><span class="muted">★ 4.6</span></div></div></article>
+              <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Brand</span><h5>Dark roast beans</h5><div class="meta"><span>210 EGP</span><span class="muted">★ 4.8</span></div></div></article>
+              <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Brand</span><h5>Olive oil 500ml</h5><div class="meta"><span>185 EGP</span><span class="muted">★ 4.4</span></div></div></article>
+              <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Brand</span><h5>Granola mix</h5><div class="meta"><span>96 EGP</span><span class="muted">★ 4.5</span></div></div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="screen" id="categories">
+      <div class="screen-label"><h2>Categories</h2><span class="route">/categories (single page; loads main categories and subcategory selection via <code>GET /api/v1/categories</code> + <code>GET /api/v1/subcategories?category=&lt;categoryId&gt;</code>)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav">
+          <div class="logo">Fresh<span>cart</span></div>
+          <div class="mock-links">
+            <a href="#home">Home</a>
+            <a class="active" href="#categories">Categories</a>
+            <a href="#brands">Brands</a>
+          </div>
+          <span class="icon-btn">🛒</span>
+        </header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>Main categories</h4><small>Browse every top-level department first</small></div>
+          <div class="grid-4">
+            <article class="card">
+              <div class="ph" style="height:140px;background:linear-gradient(135deg, #dfe9df, #e9ddd0 55%)"></div>
+              <div class="card-body">
+                <h5 style="margin:0 0 10px;font-family:var(--font-display);font-size:1.05rem">Fashion</h5>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Men</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Women</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Kids</span>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <div class="ph" style="height:140px;background:linear-gradient(135deg, #e8dfd2, #d7e8db 55%)"></div>
+              <div class="card-body">
+                <h5 style="margin:0 0 10px;font-family:var(--font-display);font-size:1.05rem">Electronics</h5>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Mobile</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Computers</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Audio</span>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <div class="ph" style="height:140px;background:linear-gradient(135deg, #f4e8d9, #e8d4e0 55%)"></div>
+              <div class="card-body">
+                <h5 style="margin:0 0 10px;font-family:var(--font-display);font-size:1.05rem">Home</h5>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Kitchen</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Decor</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Living</span>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <div class="ph" style="height:140px;background:linear-gradient(135deg, #e5e0d6, #dfe8dc 55%)"></div>
+              <div class="card-body">
+                <h5 style="margin:0 0 10px;font-family:var(--font-display);font-size:1.05rem">Beauty</h5>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Skin</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Hair</span>
+                  <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--sage-soft);color:var(--sage)">Wellness</span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="section-title" style="margin-top:36px"><h4>Subcategories</h4><small>Now choose a focused list from the same page</small></div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="pill">Women's Clothing</span>
+            <span class="pill">Mobile Accessories</span>
+            <span class="pill">Kitchen Essentials</span>
+            <span class="pill">Skincare</span>
+            <span class="pill">Office</span>
+            <span class="pill">Sports</span>
+            <span class="pill">Travel</span>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Category detail -->
+    <section class="screen" id="category-detail">
+      <div class="screen-label"><h2>Selected category</h2><span class="route">/categories (selected category/subcategory state)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav">
+          <div class="logo">Fresh<span>cart</span></div>
+          <div class="mock-links">
+            <a href="#home">Home</a>
+            <a class="active" href="#categories">Categories</a>
+            <a href="#brands">Brands</a>
+          </div>
+          <span class="icon-btn">🛒</span>
+        </header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0">
+            <h4>Selected category</h4>
+            <small>Focus remains on the /categories page. Subcategories and products are shown in the same flow.</small>
+          </div>
+          <!-- Subcategory Filter Bar -->
+          <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:16px">
+            <span style="font-size:12px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--sage);color:white;cursor:default;white-space:nowrap">All items</span>
+            <span style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,252,247,0.8);border:1px solid var(--line);cursor:default;white-space:nowrap">Computer Accessories</span>
+            <span style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,252,247,0.8);border:1px solid var(--line);cursor:default;white-space:nowrap">Data Storage</span>
+            <span style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,252,247,0.8);border:1px solid var(--line);cursor:default;white-space:nowrap">Networking Products</span>
+            <span style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,252,247,0.8);border:1px solid var(--line);cursor:default;white-space:nowrap">Video Games</span>
+          </div>
+
+          <div class="section-title" style="margin-top:0"><h4>Products in Electronics</h4><small>Filtered product grid for the current selection</small></div>
+          <div class="grid-4">
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Label</span><h5>Selected item 1</h5><div class="meta"><span>Price</span><span class="muted">★ 4.3</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Label</span><h5>Selected item 2</h5><div class="meta"><span>Price</span><span class="muted">★ 4.7</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Label</span><h5>Selected item 3</h5><div class="meta"><span>Price</span><span class="muted">★ 4.2</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Label</span><h5>Selected item 4</h5><div class="meta"><span>Price</span><span class="muted">★ 4.5</span></div></div></article>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Brands -->
+    <section class="screen" id="brands">
+      <div class="screen-label"><h2>Brands</h2><span class="route">/brands</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav">
+          <div class="logo">Fresh<span>cart</span></div>
+          <div class="mock-links">
+            <a href="#home">Home</a>
+            <a href="#categories">Categories</a>
+            <a class="active" href="#brands">Brands</a>
+          </div>
+          <span class="icon-btn">🛒</span>
+        </header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>Trusted brands</h4><small>Logo grid</small></div>
+          <div class="grid-4">
+            <article class="card"><div class="ph" style="height:140px"></div><div class="card-body" style="text-align:center;font-weight:700">Nova</div></article>
+            <article class="card"><div class="ph" style="height:140px"></div><div class="card-body" style="text-align:center;font-weight:700">Cedar</div></article>
+            <article class="card"><div class="ph" style="height:140px"></div><div class="card-body" style="text-align:center;font-weight:700">River</div></article>
+            <article class="card"><div class="ph" style="height:140px"></div><div class="card-body" style="text-align:center;font-weight:700">Atlas</div></article>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Brand detail -->
+    <section class="screen" id="brand-detail">
+      <div class="screen-label"><h2>Brand products</h2><span class="route">/brands/[id]</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a class="active" href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>Nova</h4><small>Brand header + grid</small></div>
+          <div class="grid-4">
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Nova</span><h5>Sparkling water</h5><div class="meta"><span>42 EGP</span><span class="muted">★ 4.1</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Nova</span><h5>Juice 1L</h5><div class="meta"><span>54 EGP</span><span class="muted">★ 4.6</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Nova</span><h5>Ice tea</h5><div class="meta"><span>38 EGP</span><span class="muted">★ 4.0</span></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Nova</span><h5>Energy can</h5><div class="meta"><span>65 EGP</span><span class="muted">★ 4.3</span></div></div></article>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Product detail -->
+    <section class="screen" id="product">
+      <div class="screen-label"><h2>Product details</h2><span class="route">/productdetails/[id]</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="two-col">
+            <div class="panel stack">
+              <div style="height:280px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,#e8dfd2,#d7e8db)"></div>
+              <div style="display:flex;gap:8px">
+                <div style="width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:#e5e0d6"></div>
+                <div style="width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:#dfe8dc"></div>
+                <div style="width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:#eae2d8"></div>
+              </div>
+            </div>
+            <div class="panel stack">
+              <span class="brand-pill">Cedar Dairy</span>
+              <h3 style="font-family:var(--font-display);font-weight:650;margin:0;font-size:1.75rem;line-height:1.1">Aged cheddar 250g</h3>
+              <div style="display:flex;gap:12px;align-items:center;margin-top:4px;">
+                <span style="font-size:11px;font-weight:700;color:var(--sage);background:var(--sage-soft);padding:3px 8px;border-radius:999px;">1,467 sold</span>
+                <span style="font-size:11px;font-weight:700;color:color-mix(in oklab, #d97706 80%, black);background:color-mix(in oklab, #d97706 15%, white);padding:3px 8px;border-radius:999px;">Only 220 left</span>
+              </div>
+              <p class="muted" style="margin:8px 0 0;line-height:1.5">Nutty, crumbly wedge. Same SKU and cart hooks—this is purely the visual shell.</p>
+              <div class="meta" style="font-size:22px;color:var(--sage)">189 EGP</div>
+              <div class="qty"><button type="button">−</button><span>1</span><button type="button">+</button></div>
+              <div class="btn-row">
+                <button type="button" class="btn-primary" style="flex:1">Add to cart</button>
+                <button type="button" class="btn-ghost">♥</button>
+              </div>
+            </div>
+          </div>
+          <div class="section-title">
+            <h4>Customer Reviews</h4>
+            <small>GET /api/v1/products/:id/reviews</small>
+          </div>
+          
+          <div class="panel" style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px;">
+            <!-- Review 1 (Other user) -->
+            <div style="display: flex; gap: 12px; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid var(--line);">
+              <div class="avatar" style="width: 36px; height: 36px; margin: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #eadfd2, #dbe8db); flex-shrink: 0;" aria-hidden="true">AM</div>
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                  <strong style="font-size: 14px;">Ahmed Muti</strong>
+                  <span style="color: #f59e0b; font-size: 12px;">★★★★★</span>
+                </div>
+                <p class="muted" style="margin: 0; font-size: 13px; line-height: 1.45;">Great texture, perfect for grilling. I highly recommend this aged cheddar wedge.</p>
+              </div>
+            </div>
+
+            <!-- Review 2 (Logged user's own review with Edit/Delete action triggers) -->
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <div class="avatar" style="width: 36px; height: 36px; margin: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #f3e9dc, #c9ddcc); flex-shrink: 0;" aria-hidden="true">SA</div>
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="font-size: 14px;">Sara Adel (You)</strong>
+                    <span style="color: #f59e0b; font-size: 12px;">★★★★☆</span>
+                  </div>
+                  <!-- Dropdown / Action options for owner -->
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="btn-ghost" style="padding: 4px 8px; font-size: 11px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                      Edit
+                    </button>
+                    <button type="button" class="btn-ghost" style="padding: 4px 8px; font-size: 11px; border-radius: 6px; color: #b91c1c; background: rgba(185, 28, 28, 0.05); border-color: rgba(185, 28, 28, 0.15); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <p class="muted" style="margin: 0; font-size: 13px; line-height: 1.45;">Rich flavor, but slightly crumbly. Great value for the price! (PUT/DELETE /api/v1/reviews/:reviewId)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Review Form (POST /api/v1/products/:id/reviews) -->
+          <div class="panel" style="margin-top: 16px;">
+            <h5 style="margin: 0 0 10px; font-family: var(--font-display); font-size: 1.05rem;">Write a Review</h5>
+            <form style="display: flex; flex-direction: column; gap: 10px;" onsubmit="return false;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 12px; font-weight: 700; color: color-mix(in oklab, var(--ink) 72%, transparent);">Rating:</label>
+                <div style="color: #f59e0b; font-size: 16px; cursor: pointer; letter-spacing: 2px; transition: transform 0.2s ease;" class="rating-stars">
+                  ★★★★★
+                </div>
+              </div>
+              <div class="field-block" style="margin-bottom: 0;">
+                <label for="rev-text">Your review:</label>
+                <textarea class="fake" id="rev-text" style="font-family: inherit; resize: vertical; min-height: 60px; width: 100%; border-radius: 10px; border: 1px solid var(--line); padding: 10px 12px; background: #fffdf8; transition: border-color 0.2s;" placeholder="Tell us what you think of this product..."></textarea>
+              </div>
+              <button type="button" class="btn-primary" style="align-self: flex-start; padding: 8px 16px; font-size: 13px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">Submit review (POST /api/v1/products/:id/reviews)</button>
+            </form>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Cart -->
+    <section class="screen" id="cart">
+      <div class="screen-label"><h2>Cart (v2)</h2><span class="route">/cart (calls v2: <code>/api/v2/cart</code>)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="two-col">
+            <div class="stack">
+              <article class="card list-card"><div class="thumb"></div><div><strong>Dark roast beans</strong><p class="muted" style="margin:6px 0 0">Brand · qty stepper</p><div style="margin-top:10px" class="qty"><button type="button">−</button><span>2</span><button type="button">+</button></div></div><div style="font-weight:800;text-align:right">420 EGP</div></article>
+              <article class="card list-card"><div class="thumb"></div><div><strong>Olive oil 500ml</strong><p class="muted" style="margin:6px 0 0">Brand · qty stepper</p><div style="margin-top:10px" class="qty"><button type="button">−</button><span>1</span><button type="button">+</button></div></div><div style="font-weight:800;text-align:right">185 EGP</div></article>
+            </div>
+            <div class="panel stack">
+              <h4 style="font-family:var(--font-display);margin:0">Summary</h4>
+              <div class="order-row"><span class="muted">Subtotal</span><strong>605 EGP</strong></div>
+              <label class="muted" style="font-size:12px;font-weight:700">Coupon</label>
+              <div style="display:flex;gap:0">
+                <input class="fake" style="border-radius:12px 0 0 12px;border-right:none" placeholder="SAVE10" disabled />
+                <button type="button" class="btn-primary" style="border-radius:0 12px 12px 0;padding:11px 16px">Apply</button>
+              </div>
+              <button type="button" class="btn-primary" style="width:100%;margin-top:8px">Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Checkout — design preview only (real app unchanged until approved) -->
+    <section class="screen" id="checkout">
+      <div class="screen-label"><h2>Checkout</h2><span class="route">/chekout/[cartId]</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <p class="preview-banner">Design preview only — production checkout stays as-is until you approve this layout. Here: saved addresses + optional new address + receipt with product thumbnails.</p>
+          <div class="checkout-grid">
+            <div class="stack">
+              <h4 style="font-family:var(--font-display);margin:0 0 12px;font-size:1.15rem">Your cart</h4>
+              <article class="card list-card" style="margin-bottom:12px">
+                <div class="thumb" style="height:100px"></div>
+                <div>
+                  <strong>Crew Neck Long</strong>
+                  <p class="muted" style="margin:6px 0 0">LC Waikiki</p>
+                  <p style="margin:8px 0 0;font-weight:700">449 EGP</p>
+                  <div style="margin-top:10px" class="qty"><button type="button">−</button><span>1</span><button type="button">+</button></div>
+                </div>
+              </article>
+              <article class="card list-card">
+                <div class="thumb" style="height:100px;background:linear-gradient(135deg,#e8d4e0,#d9e8db)"></div>
+                <div>
+                  <strong>Woman Shawl</strong>
+                  <p class="muted" style="margin:6px 0 0">DeFacto</p>
+                  <p style="margin:8px 0 0;font-weight:700">149 EGP</p>
+                  <div style="margin-top:10px" class="qty"><button type="button">−</button><span>1</span><button type="button">+</button></div>
+                </div>
+              </article>
+            </div>
+            <div class="stack">
+              <div class="receipt-box">
+                <div class="section-title" style="margin:0 0 10px"><h4 style="margin:0">Order receipt</h4><small>2 items</small></div>
+                <div class="receipt-line">
+                  <div class="mini-prod"><div class="mini-thumb" aria-hidden="true"></div><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Crew Neck ×1</span></div>
+                  <strong>449 EGP</strong>
+                </div>
+                <div class="receipt-line">
+                  <div class="mini-prod"><div class="mini-thumb" style="background:linear-gradient(135deg,#e8d4e0,#dbe8db)" aria-hidden="true"></div><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Woman Shawl ×1</span></div>
+                  <strong>149 EGP</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:end;margin-top:12px;padding-top:12px;border-top:2px solid var(--line)">
+                  <span class="muted" style="font-size:12px">including VAT</span>
+                  <div style="text-align:right"><span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sage)">Total</span><br><strong style="font-size:1.25rem;font-family:var(--font-display)">598.0 EGP</strong></div>
+                </div>
+              </div>
+
+              <div class="panel stack" style="padding:16px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                  <h4 style="font-family:var(--font-display);margin:0">Delivery address</h4>
+                  <span style="font-size:12px;font-weight:700;color:var(--sage);text-decoration:underline">+ Add new</span>
+                </div>
+                <div class="addr-card selected">
+                  <span class="addr-dot" aria-hidden="true"></span>
+                  <div style="flex:1">
+                    <strong>Home</strong>
+                    <div class="addr-meta" style="margin-top:6px">
+                      <span><strong>name:</strong> Home</span>
+                      <span><strong>details:</strong> Home details</span>
+                      <span><strong>phone:</strong> 01010700700</span>
+                      <span><strong>city:</strong> Gizaa</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="addr-card">
+                  <span class="addr-dot" aria-hidden="true"></span>
+                  <div style="flex:1">
+                    <strong>Work</strong>
+                    <div class="addr-meta" style="margin-top:6px">
+                      <span><strong>name:</strong> Work</span>
+                      <span><strong>details:</strong> Office floor 3, Nile tower</span>
+                      <span><strong>phone:</strong> 01099887766</span>
+                      <span><strong>city:</strong> Cairo</span>
+                    </div>
+                  </div>
+                </div>
+                <p style="margin:0 0 12px;font-size:12px;font-weight:600;color:color-mix(in oklab,var(--ink) 55%,transparent);text-decoration:underline">Or enter a different address (optional)</p>
+
+                <div style="display:flex;gap:16px;margin-bottom:12px;font-size:13px;font-weight:600">
+                  <span>○ pay cash (v2 API)</span><span class="muted">○ pay visa (v1 API)</span>
+                </div>
+                <p style="font-family:var(--font-display);font-weight:700;color:var(--sage);margin:0 0 10px">Manual Shipping Address:</p>
+                <p class="muted" style="font-size:11px;margin:0 0 10px;line-height:1.4">
+                  API requirements: <code>details</code>, <code>phone</code>, and <code>city</code> are required for both. <br>
+                  • <strong>postalCode</strong> is required only for Cash (v2 API). <br>
+                  • <strong>name</strong> is NOT supported by either checkout API.
+                </p>
+                <div class="field-block">
+                  <label for="co-details">details: <span style="color:#d97706;font-size:10px">(Required)</span></label>
+                  <input class="fake" id="co-details" value="Home details" disabled />
+                </div>
+                <div class="field-block">
+                  <label for="co-phone">phone: <span style="color:#d97706;font-size:10px">(Required)</span></label>
+                  <input class="fake" id="co-phone" value="01010700700" disabled />
+                </div>
+                <div class="field-block">
+                  <label for="co-city">city: <span style="color:#d97706;font-size:10px">(Required)</span></label>
+                  <input class="fake" id="co-city" value="Gizaa" disabled />
+                </div>
+                <div class="field-block">
+                  <label for="co-postal">Postal Code: <span style="color:var(--sage);font-size:10px">(Cash Order v2 only)</span></label>
+                  <input class="fake" id="co-postal" placeholder="12345" value="12345" disabled />
+                </div>
+                <button type="button" class="btn-primary" style="width:100%;margin-top:14px">Submit order</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Cart empty -->
+    <section class="screen" id="cart-empty">
+      <div class="screen-label"><h2>Cart empty</h2><span class="route">/cart (v2 empty state)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;text-align:center;padding:0 32px;">
+          <div style="max-width:420px;">
+            <div class="ph" style="height:220px;margin:0 auto 24px;width:100%;max-width:260px;border-radius:22px;background:linear-gradient(135deg,#e9ddd0,#dfe9df);"></div>
+            <h3 style="font-family:var(--font-display);font-size:1.7rem;margin:0 0 12px">Your cart is feeling light</h3>
+            <p class="muted" style="margin:0 0 22px;line-height:1.6;">It looks like you haven't added any groceries yet. Browse our seasonal picks to get started.</p>
+            <button class="btn-primary" style="padding:12px 22px;">Start shopping</button>
+            <p class="muted" style="margin:18px 0 0;font-size:12px;">Cart v2 uses <code>GET /api/v2/cart</code>. This state appears when the data array is empty or the cart hasn't been initialized.</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Wishlist empty -->
+    <section class="screen" id="wishlist-empty">
+      <div class="screen-label"><h2>Wishlist empty</h2><span class="route">/wishlist (empty state placeholder)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;text-align:center;padding:0 32px;">
+          <div style="max-width:420px;">
+            <div class="ph" style="height:220px;margin:0 auto 24px;width:100%;max-width:260px;border-radius:22px;background:linear-gradient(135deg,#f0e9e3,#e6f0e5);"></div>
+            <h3 style="font-family:var(--font-display);font-size:1.7rem;margin:0 0 12px">Your wishlist is empty</h3>
+            <p class="muted" style="margin:0 0 22px;line-height:1.6;">Save products while browsing and they will show up here. This placeholder is the logged-in wishlist empty state.</p>
+            <button class="btn-primary" style="padding:12px 22px;">Browse favorites</button>
+            <p class="muted" style="margin:18px 0 0;font-size:12px;">Wishlist uses <code>GET /api/v1/wishlist</code>. When there are no items, show an empty placeholder plus an invite to continue shopping.</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Profile -->
+    <section class="screen" id="profile">
+      <div class="screen-label"><h2>Profile</h2><span class="route">/profile</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;align-items:flex-start;padding-top:40px">
+          <div class="panel profile-card" style="width:100%">
+            <div class="avatar" aria-hidden="true"></div>
+            <h3 style="font-family:var(--font-display);margin:0;font-size:1.5rem">Sara Adel</h3>
+            <p class="muted" style="margin:8px 0 22px">sara@example.com</p>
+            <div style="text-align:left">
+              <div class="link-row"><span>Addresses</span><span>→</span></div>
+              <div class="link-row"><span>Update password</span><span>→</span></div>
+              <div class="link-row"><span>Update data</span><span>→</span></div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Update password -->
+    <section class="screen" id="update-password">
+      <div class="screen-label"><h2>Update password</h2><span class="route">/updatepassword</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;justify-content:center;min-height:520px;padding:0 32px;">
+          <div class="panel" style="max-width:520px;width:100%;">
+            <h4 style="font-family:var(--font-display);margin:0 0 10px">Change password</h4>
+            <p class="muted" style="margin:0 0 18px;line-height:1.6;">This placeholder reflects the update password screen and the API call to <code>POST /api/v1/users/changeMyPassword</code>.</p>
+            <div class="stack">
+              <div class="field-block"><label>Current password</label><input class="fake" value="●●●●●●●●" disabled /></div>
+              <div class="field-block"><label>New password</label><input class="fake" value="●●●●●●●●" disabled /></div>
+              <div class="field-block"><label>Confirm new password</label><input class="fake" value="●●●●●●●●" disabled /></div>
+              <button type="button" class="btn-primary">Save password</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Update user data -->
+    <section class="screen" id="update-user">
+      <div class="screen-label"><h2>Update user data</h2><span class="route">/updateuserdata</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;justify-content:center;min-height:520px;padding:0 32px;">
+          <div class="panel" style="max-width:520px;width:100%;">
+            <h4 style="font-family:var(--font-display);margin:0 0 10px">Update profile</h4>
+            <p class="muted" style="margin:0 0 18px;line-height:1.6;">This placeholder reflects the update data screen and the API call to <code>POST /api/v1/users/updateMe</code>.</p>
+            <div class="stack">
+              <div class="field-block"><label>Name</label><input class="fake" value="Sara Adel" disabled /></div>
+              <div class="field-block"><label>Email</label><input class="fake" value="sara@example.com" disabled /></div>
+              <div class="field-block"><label>Phone</label><input class="fake" value="01010700700" disabled /></div>
+              <button type="button" class="btn-primary">Save profile</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Addresses -->
+    <section class="screen" id="addresses">
+      <div class="screen-label"><h2>Addresses</h2><span class="route">/addresses</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>Saved addresses</h4><small>API fields: name · details · phone · city</small></div>
+          <div class="order-row" style="align-items:flex-start">
+            <div>
+              <strong>Home</strong>
+              <div class="addr-meta" style="margin-top:8px">
+                <span><strong>name:</strong> Home</span>
+                <span><strong>details:</strong> Home details</span>
+                <span><strong>phone:</strong> 01010700700</span>
+                <span><strong>city:</strong> Gizaa</span>
+              </div>
+            </div>
+            <button type="button" class="btn-ghost">Delete</button>
+          </div>
+          <div class="order-row" style="align-items:flex-start">
+            <div>
+              <strong>Work</strong>
+              <div class="addr-meta" style="margin-top:8px">
+                <span><strong>name:</strong> Work</span>
+                <span><strong>details:</strong> Office floor 3, Nile tower</span>
+                <span><strong>phone:</strong> 01099887766</span>
+                <span><strong>city:</strong> Cairo</span>
+              </div>
+            </div>
+            <button type="button" class="btn-ghost">Delete</button>
+          </div>
+          <button type="button" class="btn-primary" style="margin-top:10px">Add address</button>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Locations -->
+    <section class="screen" id="locations">
+      <div class="screen-label"><h2>Locations</h2><span class="route">/locations (placeholder for LocationDrawer / saved delivery locations)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="padding-top:28px;">
+          <div class="section-title" style="margin-top:0"><h4>Saved delivery locations</h4><small>Placeholder for location cards and drawer interactions</small></div>
+          <div class="two-col">
+            <div class="panel">
+              <div class="addr-card selected" style="background:rgba(14,133,40,0.08);border-color:var(--sage);margin-bottom:14px">
+                <span class="addr-dot"></span>
+                <div>
+                  <strong>Home</strong>
+                  <div class="addr-meta" style="margin-top:8px">
+                    <span><strong>details:</strong> Building 3, El Nile Street</span>
+                    <span><strong>phone:</strong> 01010700700</span>
+                    <span><strong>city:</strong> Gizaa</span>
+                  </div>
+                </div>
+              </div>
+              <div class="addr-card" style="margin-bottom:14px">
+                <span class="addr-dot"></span>
+                <div>
+                  <strong>Office</strong>
+                  <div class="addr-meta" style="margin-top:8px">
+                    <span><strong>details:</strong> Nile Tower, floor 4</span>
+                    <span><strong>phone:</strong> 01099887766</span>
+                    <span><strong>city:</strong> Cairo</span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-primary" style="width:100%">Add new location</button>
+            </div>
+            <div class="panel" style="min-height:320px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px;">
+              <div class="ph" style="width:100%;height:180px;border-radius:20px;"></div>
+              <p class="muted" style="max-width:300px;">This placeholder represents the future LocationDrawer or saved address interaction. It can show map pins, quick select buttons, and a “use current location” control.</p>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Locations empty -->
+    <section class="screen" id="locations-empty">
+      <div class="screen-label"><h2>Locations empty</h2><span class="route">/locations (empty state placeholder)</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;text-align:center;padding:0 32px;">
+          <div style="max-width:420px;">
+            <div class="ph" style="height:220px;margin:0 auto 24px;width:100%;max-width:260px;border-radius:22px;background:linear-gradient(135deg,#f4e8d9,#e8d4e0);"></div>
+            <h3 style="font-family:var(--font-display);font-size:1.7rem;margin:0 0 12px">Where should we deliver?</h3>
+            <p class="muted" style="margin:0 0 22px;line-height:1.6;">You haven't saved any delivery locations yet. Add your home or office address for faster checkout.</p>
+            <button class="btn-primary" style="padding:12px 22px;">Add first location</button>
+            <p class="muted" style="margin:18px 0 0;font-size:12px;">Locations are managed via the <code>User Addresses</code> API endpoints (v1). This state shows when <code>GET /api/v1/addresses</code> returns an empty array.</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Add address -->
+    <section class="screen" id="add-address">
+      <div class="screen-label"><h2>Add address</h2><span class="route">/addadress</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="panel" style="max-width:520px;margin:0 auto">
+            <h4 style="font-family:var(--font-display);margin:0 0 8px">New address</h4>
+            <p class="muted" style="font-size:12px;margin:0 0 16px;line-height:1.45">POST body — all fields required by API:</p>
+            <pre style="font-size:11px;background:rgba(14,133,40,0.08);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 16px;overflow-x:auto">{
+  "name": "Home",
+  "details": "Home details",
+  "phone": "01010700700",
+  "city": "Gizaa"
+}</pre>
+            <div class="stack">
+              <div class="field-block">
+                <label for="add-name">name:</label>
+                <input class="fake" id="add-name" placeholder="EX: Home" value="Home" disabled />
+              </div>
+              <div class="field-block">
+                <label for="add-details">details:</label>
+                <input class="fake" id="add-details" placeholder="EX: Home details" value="Home details" disabled />
+              </div>
+              <div class="field-block">
+                <label for="add-phone">phone:</label>
+                <input class="fake" id="add-phone" placeholder="EX: 01010700700" value="01010700700" disabled />
+              </div>
+              <div class="field-block">
+                <label for="add-city">city:</label>
+                <input class="fake" id="add-city" placeholder="EX: Gizaa" value="Gizaa" disabled />
+              </div>
+              <button type="button" class="btn-primary" style="width:100%">Save address</button>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- All orders -->
+    <section class="screen" id="orders">
+      <div class="screen-label"><h2>All orders</h2><span class="route">/allorders</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>My Orders</h4><small>Single order card — original layout + redesign skin</small></div>
+
+          <article class="order-card" aria-label="Order card preview">
+            <div class="order-card-head">
+              <h5>Order #6a162774fc33d80012107990</h5>
+              <span class="status-badge">Not Paid</span>
+            </div>
+            <div class="order-card-body">
+              <div class="order-info">
+                <span>Customer: <strong>Mustafa</strong></span>
+                <span>Phone: <strong>01550776285</strong></span>
+                <span>City: <strong>جيزة</strong></span>
+                <span>Details: <strong>gizza</strong></span>
+                <strong class="total">Total: 718 EGP</strong>
+              </div>
+              <div class="order-thumbs" aria-hidden="true">
+                <div class="order-thumb" title="Crew Neck sweater"></div>
+                <div class="order-thumb alt" title="Woman Shawl"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="order-card">
+            <div class="order-card-head">
+              <h5>Order #98102a8f3c21e90044108812</h5>
+              <span class="status-badge paid">Paid</span>
+            </div>
+            <div class="order-card-body">
+              <div class="order-info">
+                <span>Customer: <strong>Mustafa</strong></span>
+                <span>Phone: <strong>01010700700</strong></span>
+                <span>City: <strong>Gizaa</strong></span>
+                <span>Details: <strong>Home details</strong></span>
+                <strong class="total">Total: 310 EGP</strong>
+              </div>
+              <div class="order-thumbs" aria-hidden="true">
+                <div class="order-thumb"></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Order detail -->
+    <section class="screen" id="order-detail">
+      <div class="screen-label"><h2>Order details</h2><span class="route">/orderdetails</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <a class="back-link" href="#orders">← Back to Orders</a>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <h4>Order #6a162774fc33d80012107990</h4>
+              <span class="pay-badge">cash</span>
+            </div>
+
+            <div class="detail-section">
+              <h6>Customer Details</h6>
+              <div class="customer-box">
+                <div class="avatar-circle">M</div>
+                <div>
+                  <p class="name">Mustafa</p>
+                  <p class="muted-line">mezo2000tiger4@gmail.com</p>
+                  <p class="muted-line">01550776285</p>
+                </div>
+              </div>
+              <div class="ship-box">
+                <span><strong>Shipping address</strong></span>
+                <span><strong>phone:</strong> 01550776285</span>
+                <span><strong>city:</strong> جيزة</span>
+                <span><strong>details:</strong> gizza</span>
+              </div>
+            </div>
+
+            <div class="detail-section" style="padding-top:0">
+              <h6>Order Items (2)</h6>
+              <div class="order-item-row">
+                <div class="item-thumb" aria-hidden="true"></div>
+                <div class="item-info">
+                  <p class="item-title">Crew Neck Long Sleeve Men's Knitwear Sweater</p>
+                  <p class="item-qty">Qty: 1</p>
+                </div>
+                <span class="item-price">449 EGP</span>
+              </div>
+              <div class="order-item-row">
+                <div class="item-thumb alt" aria-hidden="true"></div>
+                <div class="item-info">
+                  <p class="item-title">Woman Shawl</p>
+                  <p class="item-qty">Qty: 1</p>
+                </div>
+                <span class="item-price">149 EGP</span>
+              </div>
+            </div>
+
+            <hr class="detail-divider" />
+
+            <div class="summary-lines">
+              <div class="summary-line"><span>Shipping</span><span>100 EGP</span></div>
+              <div class="summary-line"><span>Tax</span><span>20 EGP</span></div>
+              <div class="summary-line total"><span>Total</span><span>718 EGP</span></div>
+            </div>
+
+            <div class="payment-footer">
+              <div><strong>Payment Method:</strong> <span style="text-transform:capitalize;font-weight:700">cash</span></div>
+              <span class="status-badge">Not Paid</span>
+            </div>
+          </div>
+
+          <p class="muted" style="font-size:12px;margin:18px 0 0;text-align:center">Second example — visa payment</p>
+          <div class="detail-card" style="margin-top:10px">
+            <div class="detail-card-head">
+              <h4>Order #98102a8f3c21e90044108812</h4>
+              <span class="pay-badge visa">visa</span>
+            </div>
+            <div class="detail-section">
+              <h6>Customer Details</h6>
+              <div class="customer-box">
+                <div class="avatar-circle">M</div>
+                <div>
+                  <p class="name">Mustafa</p>
+                  <p class="muted-line">mezo2000tiger4@gmail.com</p>
+                  <p class="muted-line">01010700700</p>
+                </div>
+              </div>
+            </div>
+            <div class="payment-footer">
+              <div><strong>Payment Method:</strong> <span style="text-transform:capitalize;font-weight:700">visa</span></div>
+              <span class="status-badge paid">Paid</span>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- Wishlist -->
+    <section class="screen" id="wishlist">
+      <div class="screen-label"><h2>Wishlist</h2><span class="route">/wishlist</span></div>
+      <div class="frame"><div class="mock">
+        <header class="mock-nav"><div class="logo">Fresh<span>cart</span></div><div class="mock-links"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#brands">Brands</a></div><span class="icon-btn">🛒</span></header>
+        <div class="mock-body">
+          <div class="section-title" style="margin-top:0"><h4>Saved items</h4><small>Matches product cards</small></div>
+          <div class="grid-4">
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">River</span><h5>Honey jar</h5><div class="meta"><span>75 EGP</span><button type="button" class="btn-ghost" style="padding:6px 10px;font-size:12px">Remove</button></div></div></article>
+            <article class="card"><div class="ph"></div><div class="card-body"><span class="brand-pill">Atlas</span><h5>Trail mix</h5><div class="meta"><span>62 EGP</span><button type="button" class="btn-ghost" style="padding:6px 10px;font-size:12px">Remove</button></div></div></article>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+  </div>
+</body>
+</html>

@@ -24,11 +24,11 @@ export default function Slider({ categories }: { categories: Category[] }) {
         loop={categories.length > 4}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         watchSlidesProgress={true}
-        className="w-full"
+        className="w-full h-full"
       >
         {categories?.map((cat, index) => (
           <SwiperSlide key={cat._id}>
-            <div className="w-full h-44 relative rounded-sm overflow-hidden bg-gray-100">
+            <div className="w-full h-50 imageCover relative rounded-sm overflow-hidden bg-gray-100">
               <Link href={`/categories/${cat._id}`} className="block w-full h-full relative">
                 <Image
                   src={cat.image}

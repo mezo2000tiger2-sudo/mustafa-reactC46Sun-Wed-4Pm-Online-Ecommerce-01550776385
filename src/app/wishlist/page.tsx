@@ -1,38 +1,12 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useWishlist } from '../_servecies/wishlist/getWishlist'
 import Loading from '../loading';
 import { ProductCard } from '../_components/ProductCard/ProductCard';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 
 export default function Wishlist() {
   const { data, isLoading, error } = useWishlist()
-  const headerRef = useRef(null);
-  
-  useGSAP(() => {
-   
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: -30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-      );
-
-      gsap.fromTo(
-        '.wishlist-card',
-        { opacity: 0, y: -50 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.6, 
-          stagger: 0.3, 
-          ease: 'power3.out',
-          delay: 0.3
-        }
-      );
-    
-  });
   
   if(isLoading){
     return <Loading/>
@@ -44,7 +18,7 @@ export default function Wishlist() {
   return (
     <div className="min-h-screen bg-main px-4 py-12">
       <div className="max-w-7xl bg-white py-3 rounded-2xl mx-auto">
-        <div ref={headerRef} className="text-center mb-12">
+        <div className="text-center mb-12">
           <div className="inline-block mb-4">
             <div className="relative">
               <h1 className="text-5xl md:text-6xl font-bold text-gray-800">
@@ -58,7 +32,7 @@ export default function Wishlist() {
           <div className="bg-white rounded-2xl  p-6 md:p-8 border border-gray-100">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {wishlistItems.map((prod:any) => (
-                <div key={prod.id} className="wishlist-card">
+                <div key={prod.id}>
                   <ProductCard prod={prod} />
                 </div>
               ))}
