@@ -19,20 +19,21 @@ export default function HomeSwipper() {
     loop={true}
     autoplay={{ delay: 3000, disableOnInteraction: false }}
     watchSlidesProgress={true}
+    className="h-full w-full"
     >
         <SwiperSlide>
-          <div className="w-full h-72 relative bg-gray-100">
-            <Image src={sliderIMG1} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG1" fill className="object-cover" priority />
+          <div className="w-full h-full relative bg-gray-100">
+            <Image src={sliderIMG1} sizes="(max-width: 768px) 100vw, 80vw" alt="sliderIMG1" fill className="object-cover" priority />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="w-full h-72 relative bg-gray-100">
-            <Image src={sliderIMG2} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG2" fill className="object-cover" />
+          <div className="w-full h-full relative bg-gray-100">
+            <Image src={sliderIMG2} sizes="(max-width: 768px) 100vw, 80vw" alt="sliderIMG2" fill className="object-cover" />
           </div>
         </SwiperSlide>
         <SwiperSlide>
-          <div className="w-full h-72 relative bg-gray-100">
-            <Image src={sliderIMG3} sizes="(max-width: 768px) 75vw, 75vw" alt="sliderIMG3" fill className="object-cover" />
+          <div className="w-full h-full relative bg-gray-100">
+            <Image src={sliderIMG3} sizes="(max-width: 768px) 100vw, 80vw" alt="sliderIMG3" fill className="object-cover" />
           </div>
         </SwiperSlide>
         

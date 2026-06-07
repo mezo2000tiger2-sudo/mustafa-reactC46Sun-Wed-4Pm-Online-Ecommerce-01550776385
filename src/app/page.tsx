@@ -19,56 +19,52 @@ export default function Home() {
       <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.07] mix-blend-multiply" 
            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E")` }} />
 
-      <div className="page-container relative z-10 mx-auto max-w-[1180px] px-6 py-9 lg:py-20">
+      <div className="page-container relative z-10 mx-auto max-w-[1340px] px-6 py-12 lg:py-24">
         
         {/* Hero Section */}
-        <section className="hero mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
-          <div className="hero-visual relative min-h-[260px] overflow-hidden rounded-[18px] border border-[#1c1914]/12 bg-[#e8dfd2] shadow-[0_22px_55px_rgba(28,25,20,0.12)]">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(14,133,40,0.18),transparent_55%),linear-gradient(210deg,rgba(224,176,128,0.35),transparent_60%)]" />
-            <span className="absolute top-4 left-4 z-10 rounded-full border border-[#1c1914]/12 bg-[#fffcf7]/92 px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider">Seasonal picks</span>
-            {/* You could add a background image here if available */}
+        <section className="hero mb-24 grid gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div className="hero-visual relative aspect-[16/10] lg:aspect-auto lg:h-[520px] overflow-hidden rounded-[24px] border border-[#1c1914]/10 bg-[#e8dfd2] shadow-[0_32px_85px_rgba(28,25,20,0.15)]">
+            {/* <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(14,133,40,0.15),transparent_55%),linear-gradient(210deg,rgba(224,176,128,0.25),transparent_60%)]" /> */}
+            <span className="absolute top-6 left-6 z-10 rounded-full border border-[#1c1914]/10 bg-[#fffcf7]/95 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.15em]">Seasonal picks</span>
             <HomeSwipper/>
           </div>
-          <div className="hero-copy flex flex-col justify-center">
-            <span className="pill mb-2 inline-block w-fit rounded-full border border-[#1c1914]/12 bg-[#0e8528]/10 px-3 py-1.5 text-[12px] font-semibold text-[#0e8528]">
-              Farm-traceable · Fast delivery
-            </span>
-            <h3 className="mb-3 font-serif text-4xl font-semibold tracking-tight leading-[1.06] md:text-5xl lg:text-6xl">
-              Groceries with an editorial eye.
-            </h3>
-            <p className="mb-6 max-w-[46ch] text-[15px] leading-relaxed text-[#1c1914]/70">
-              Big hero moment, soft paper texture, and a confident green accent—same product data, new atmosphere.
-            </p>
-            <div className="flex flex-wrap gap-2.5">
-              <button className="rounded-xl bg-[#0e8528] px-4.5 py-2.5 text-sm font-bold text-white shadow-[0_14px_30px_rgba(14,133,40,0.25)] transition-transform hover:-translate-y-0.5 active:scale-95">
-                Shop produce
-              </button>
-              <button className="rounded-xl border border-[#1c1914]/12 bg-[#fffcf7]/75 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-[#fffcf7]">
-                Browse deals
-              </button>
+          <div className="hero-copy flex flex-col justify-center lg:pl-4 mt-8 lg:mt-0">
+            <div className="flex items-center gap-3 mb-3 lg:mb-4">
+              <span className="h-px w-6 lg:w-8 bg-[#0e8528]/40" />
+              <span className="text-[10px] lg:text-[12px] font-bold uppercase tracking-[0.2em] text-[#0e8528]">Premium Groceries</span>
             </div>
+            <h3 className="mb-4 lg:mb-5 font-serif text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold tracking-tight leading-[1.1] lg:leading-[1.02]">
+              Freshness <br className="hidden md:block" />
+              <span className="italic text-[#0e8528]">Redefined.</span>
+            </h3>
+            <p className="mb-0 max-w-[42ch] text-[14px] lg:text-[16px] leading-relaxed text-[#1c1914]/65">
+              Experience a new standard of farm-to-table delivery. Hand-picked selections, delivered with an editorial eye for quality and aesthetics.
+            </p>
           </div>
         </section>
+
         {/* Categories Section */}
-        <section className="mb-14">
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <h4 className="font-serif text-2xl font-semibold tracking-tight">Categories</h4>
+        <section className="mb-24">
+          <div className="mb-8 flex items-end justify-between border-b border-[#1c1914]/5 pb-4">
+            <h4 className="font-serif text-3xl font-semibold tracking-tight">Curated Categories</h4>
           </div>
-          <Suspense fallback={<div className="h-44 w-full animate-pulse rounded-xl bg-black/5" />}>
+          <Suspense fallback={<div className="h-64 w-full animate-pulse rounded-2xl bg-[#1c1914]/5" />}>
             <CategorySlider />
           </Suspense>
         </section>
 
         {/* Featured Products */}
-        <section>
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <h4 className="font-serif text-2xl font-semibold tracking-tight">Featured products</h4>
-            <small className="text-[12px] font-medium text-[#1c1914]/58">Grid matches ProductCard layout</small>
+        <section className="mb-12">
+          <div className="mb-8 flex items-end justify-between border-b border-[#1c1914]/5 pb-4">
+            <div>
+              <h4 className="font-serif text-3xl font-semibold tracking-tight">Featured products</h4>
+              <p className="mt-1 text-[13px] text-[#1c1914]/50">Seasonally selected by our experts</p>
+            </div>
           </div>
           <Suspense fallback={
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="h-80 w-full animate-pulse rounded-[18px] bg-black/5 shadow-sm" />
+                <div key={i} className="h-96 w-full animate-pulse rounded-[24px] bg-[#1c1914]/5" />
               ))}
             </div>
           }>

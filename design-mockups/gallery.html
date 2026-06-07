@@ -61,7 +61,7 @@
     }
 
     .toc-inner {
-      max-width: 1180px;
+      max-width: 1280px;
       margin: 0 auto;
     }
 
@@ -106,7 +106,7 @@
     }
 
     .page {
-      max-width: 1180px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 36px 22px 80px;
     }
@@ -216,13 +216,13 @@
 
     .mock-body {
       flex: 1;
-      padding: 28px 22px 36px;
+      padding: 48px 32px 64px;
     }
 
     .grid-4 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 24px;
     }
 
     @media (max-width: 960px) {
@@ -236,63 +236,66 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-      align-items: stretch;
-      margin-bottom: 28px;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+      margin-bottom: 80px;
     }
 
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; }
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; gap: 32px; }
     }
 
     .hero-visual {
       position: relative;
-      border-radius: var(--radius);
+      border-radius: 24px;
       overflow: hidden;
       border: 1px solid var(--line);
-      min-height: 260px;
+      min-height: 420px;
       background:
         linear-gradient(135deg, color-mix(in oklab, var(--sage) 18%, white), transparent 55%),
         linear-gradient(210deg, var(--apricot), transparent 60%),
         #e8dfd2;
-      box-shadow: var(--shadow);
+      box-shadow: 0 32px 85px rgba(28,25,20,0.15);
     }
 
     .hero-visual .tag {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      font-size: 11px;
+      top: 24px;
+      left: 24px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 6px 10px;
+      padding: 7px 12px;
       border-radius: 999px;
-      background: rgba(255, 252, 247, 0.92);
+      background: rgba(255, 252, 247, 0.95);
       border: 1px solid var(--line);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
     .hero-copy h3 {
       font-family: var(--font-display);
       font-variation-settings: "opsz" 72;
       font-weight: 650;
-      font-size: clamp(1.8rem, 3.8vw, 2.65rem);
-      line-height: 1.06;
-      margin: 10px 0 12px;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1.02;
+      margin: 12px 0 20px;
+      letter-spacing: -0.04em;
     }
 
     .hero-copy p {
-      margin: 0 0 18px;
-      max-width: 46ch;
-      line-height: 1.55;
-      color: color-mix(in oklab, var(--ink) 70%, transparent);
+      margin: 0 0 32px;
+      max-width: 42ch;
+      line-height: 1.6;
+      color: color-mix(in oklab, var(--ink) 65%, transparent);
       font-weight: 400;
+      font-size: 16px;
     }
 
     .btn-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 14px;
     }
 
     .btn-primary {
@@ -300,18 +303,20 @@
       color: #fff;
       border: none;
       font-weight: 700;
-      padding: 11px 18px;
-      border-radius: 12px;
+      padding: 14px 28px;
+      border-radius: 14px;
       cursor: default;
-      box-shadow: 0 14px 30px rgba(14, 133, 40, 0.25);
+      box-shadow: 0 20px 40px rgba(14, 133, 40, 0.2);
+      font-size: 14px;
     }
 
     .btn-ghost {
       background: rgba(255, 252, 247, 0.75);
       border: 1px solid var(--line);
       font-weight: 600;
-      padding: 11px 16px;
-      border-radius: 12px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-size: 14px;
     }
 
     .section-title {
@@ -319,7 +324,9 @@
       align-items: end;
       justify-content: space-between;
       gap: 12px;
-      margin: 28px 0 14px;
+      margin: 64px 0 24px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
     }
 
     .section-title h4 {
@@ -417,19 +424,25 @@
 
     .cats {
       display: flex;
-      gap: 12px;
+      gap: 20px;
       overflow-x: auto;
-      padding-bottom: 8px;
+      padding: 4px 4px 24px;
     }
 
     .cat {
       flex: 0 0 auto;
-      width: 112px;
-      border-radius: 14px;
+      width: 140px;
+      border-radius: 18px;
       border: 1px solid var(--line);
       background: var(--card);
-      padding: 12px;
+      padding: 18px;
       text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cat:hover {
+      transform: translateY(-4px);
+      border-color: var(--sage);
     }
 
     .cat .cph {
@@ -955,22 +968,18 @@
                 <span class="tag">Seasonal picks</span>
               </div>
               <div class="hero-copy">
-                <p class="pill" style="display:inline-block;background:rgba(14,133,40,0.1);border:1px solid var(--line);margin:0 0 6px">Farm-traceable · Fast delivery</p>
-                <h3>Groceries with an editorial eye.</h3>
-                <p>Big hero moment, soft paper texture, and a confident green accent—same product data, new atmosphere.</p>
-                <div class="btn-row">
-                  <button type="button" class="btn-primary">Shop produce</button>
-                  <button type="button" class="btn-ghost">Browse deals</button>
-                </div>
+                <p class="pill" style="display:inline-block;background:rgba(14,133,40,0.1);border:1px solid var(--line);margin:0 0 14px">Premium Groceries</p>
+                <h3>Freshness <br><span style="font-style:italic;color:var(--sage)">Redefined.</span></h3>
+                <p>Experience a new standard of farm-to-table delivery. Hand-picked selections, delivered with an editorial eye for quality and aesthetics.</p>
               </div>
             </div>
-            <div class="slider-row">
+            <div class="slider-row" style="margin-bottom: 64px;">
               <div class="swiper-main" aria-hidden="true"></div>
               <div class="swiper-side"><div></div><div></div></div>
             </div>
             <div class="section-title">
-              <h4>Categories</h4>
-              <small>Horizontal rail</small>
+              <h4>Curated Categories</h4>
+              <small>View all</small>
             </div>
             <div class="cats">
               <div class="cat"><div class="cph"></div><div style="font-size:12px;font-weight:700">Dairy</div></div>

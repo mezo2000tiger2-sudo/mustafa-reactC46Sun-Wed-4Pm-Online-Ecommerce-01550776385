@@ -18,42 +18,40 @@ export function ProductCard({prod}:{prod: ProductInterface}) {
 const { data, isLoading, error } = useWishlist()
   
   return (
-    <Card className="relative mx-auto w-full overflow-hidden max-w-sm pt-0">
+    <Card className="group relative mx-auto w-full overflow-hidden rounded-[24px] border-[#1c1914]/5 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_32px_64px_rgba(0,0,0,0.08)] hover:-translate-y-2">
       
       <Link href={`/productdetails/${prod._id}`}>
-
-      <Image
-        src={prod.imageCover}
-        alt={prod.title}
-        width={500}
-        height={400}
-        className="w-full mb-2 "
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-      />
-      <CardHeader>
-        <CardAction>
-          <Badge variant="secondary">{prod.brand.name}</Badge>
-        </CardAction>
-        <CardTitle>{prod.title.split(' ').slice(0,2).join(' ')}</CardTitle>
-        <CardDescription >
-          <span className="line-clamp-3">{prod.description}</span>
-          <div className="flex justify-between gap-3 items-center w-full">
-
-          <p className="text-md font-semibold text-black">{prod.price}EGP</p>
-          <p className="text-md font-semibold text-black flex gap-0.5  items-center">
-            {prod.ratingsAverage}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 text text-yellow-400 border-0">
-          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clipRule="evenodd" />
-          </svg>
-
-
-
-          </p>
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <Image
+          src={prod.imageCover}
+          alt={prod.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        />
+        <div className="absolute top-4 right-4 translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+           <Badge className="bg-white/90 backdrop-blur-md text-[#0e8528] border-none shadow-sm hover:bg-white">{prod.ratingsAverage} ★</Badge>
+        </div>
+      </div>
+      <CardHeader className="p-5">
+        <div className="mb-2">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[#0e8528]/80">{prod.brand.name}</span>
+        </div>
+        <CardTitle className="line-clamp-1 font-serif text-lg font-semibold tracking-tight">{prod.title}</CardTitle>
+        <CardDescription className="mt-2">
+          <span className="line-clamp-2 text-[13px] leading-relaxed text-[#1c1914]/50">{prod.description}</span>
+          <div className="mt-4 flex justify-between items-center w-full">
+            <p className="text-lg font-bold text-[#1c1914]">{prod.price} <span className="text-[10px] font-medium opacity-60">EGP</span></p>
+            <div className="flex items-center gap-1 text-[12px] font-bold text-[#0e8528]">
+               {prod.quantity > 0 ? 'In stock' : 'Out of stock'}
+            </div>
           </div>
         </CardDescription>
       </CardHeader>
       </Link>
-      <AddBTN data={data} id={prod._id}/> 
+      <div className="p-5 pt-0">
+        <AddBTN data={data} id={prod._id}/> 
+      </div>
     </Card>
   )
 }
