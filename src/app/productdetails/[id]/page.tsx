@@ -49,7 +49,6 @@ function StarRating({ rating }: { rating: number }) {
     </div>
   )
 }
-
 export default function Productdetails() {
     const [userID, setuserID] = useState(false)
 

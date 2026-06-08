@@ -1,12 +1,22 @@
 import { Suspense } from "react";
 import { ProductCard } from "./_components/ProductCard/ProductCard";
 import { ProductInterface } from "./_type/ProductInterface";
-import HomeSwipper from "./_components/HomeSwipper/HomeSwipper";
-import CategorySlider from "./_components/CategorySlider/CategorySlider";
+import dynamic from "next/dynamic";
+
+const HomeSwipper = dynamic(() => import("./_components/HomeSwipper/HomeSwipper"), {
+  ssr: true,
+});
+
+const CategorySlider = dynamic(() => import("./_components/CategorySlider/CategorySlider"), {
+  ssr: true,
+});
 
 export default function Home() {
   return (
     <main className="min-height-screen relative overflow-hidden bg-[#f6f1e8] text-[#1c1914] selection:bg-[#0e8528]/20">
+      <link rel="preconnect" href="https://ecommerce.routemisr.com" />
+      <link rel="dns-prefetch" href="https://ecommerce.routemisr.com" />
+      
       {/* Background Gradients */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(1000px_620px_at_10%_6%,rgba(14,133,40,0.22),transparent_58%)]" />
