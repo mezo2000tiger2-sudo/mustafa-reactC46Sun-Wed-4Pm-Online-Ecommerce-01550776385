@@ -56,9 +56,7 @@ export default  function Chekout() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
             {/* Left — Your cart */}
             <div className="flex flex-col gap-3">
-              <h4 className="mb-1 text-lg font-bold tracking-tight text-[#1c1914]">
-                Your cart
-              </h4>
+              
               {data?.data?.products.map((prod: any) => {
                 return (
                   <div
@@ -66,7 +64,7 @@ export default  function Chekout() {
                     className="group relative overflow-hidden rounded-[20px] bg-white p-5 shadow-[0_2px_16px_rgba(28,25,20,0.07)] transition-all duration-300 hover:shadow-[0_16px_44px_rgba(194,65,12,0.12)] sm:p-6"
                   >
                     {/* Left accent bar that appears on hover */}
-                    <div className="absolute bottom-0 left-0 top-0 w-1 origin-bottom scale-y-0 rounded-r bg-[#c2410c] transition-transform duration-300 group-hover:scale-y-100" />
+                    <div className="absolute bottom-0 left-0 top-0 w-1 origin-bottom scale-y-0 rounded-r bg-main transition-transform duration-300 group-hover:scale-y-100" />
 
                     <div className="flex gap-5 sm:gap-6">
                       {/* Image — framed with offset shadow */}
@@ -78,7 +76,7 @@ export default  function Chekout() {
                           className="relative h-[110px] w-[100px] rounded-[14px] object-cover shadow-[0_4px_12px_rgba(28,25,20,0.08)] sm:h-[120px] sm:w-[120px]"
                         />
                         {/* Count badge */}
-                        <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#c2410c] text-[11px] font-bold text-white shadow-[0_2px_8px_rgba(194,65,12,0.25)]">
+                        <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-main text-[11px] font-bold text-white shadow-[0_2px_8px_rgba(194,65,12,0.25)]">
                           {prod.count}
                         </div>
                       </div>

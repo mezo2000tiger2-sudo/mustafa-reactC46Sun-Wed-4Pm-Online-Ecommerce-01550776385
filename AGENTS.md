@@ -56,8 +56,12 @@ Folder names are misspelled and inconsistent on purpose in the current codebase;
 - `chekout/` (checkout)
 - `verefyresetcode/` (verify reset code)
 - `UpdateuserData/` vs `updateuserdata/` (mixed case — see above)
-- `_servecies/` (services)
+- `_servecies/` (services) — also `_servecies/address/` (address misspelled in filenames `add-adress.ts`, `del-adress.ts`, `get-addreses.ts`)
 - `providors/` (providers)
+- `_updateAndDeleteRevie/` (Review)
+- `Fotter/` (Footer)
+- `FaildLogin` type in `_type/AuthInterface.tsx` (Failed)
+- `acces-token.ts` in `src/schema/` (access) — note: it's a JWT decode utility, not a Zod schema
 
 ## Auth token extraction — two patterns
 
