@@ -35,10 +35,10 @@ export default function Adresses() {
     return <Loading />
   }
   return (
-    <div className='min-h-screen bg-main pt-16 px-4 pb-8'>
-      <div className="bg-white rounded-2xl p-5 relative">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 m text-center">My Addresses</h1>
-        <div className='flex w-full justify-end mb-5'>
+    <div className='min-h-screen bg-[#f6f1e8] py-10 px-5'>
+      <div className="max-full mx-auto bg-[#fffdf8] border border-[rgba(28,25,20,0.12)] rounded-[18px] p-6 shadow-[0_12px_32px_rgba(28,25,20,0.07)]">
+        <div className="flex items-center justify-between mb-6">
+          <h4 className="font-[550] text-[1.25rem] tracking-tight">Saved addresses</h4>
           <Link href={'/addadress'}>
             <Button onClick={() => { console.log("Add address clicked"); }} className="gap-2 text-end ">
               <Plus className="h-4 w-4" />
@@ -46,48 +46,28 @@ export default function Adresses() {
             </Button>
           </Link>
         </div>
-        <div className='flex flex-col gap-4 justify-center items-center'>
+        <div className='flex flex-col gap-3'>
           {data?.data?.map((adress: any) => {
-            return <Card key={adress._id} className="w-full">
-              <CardContent className="p-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                      <MapPin className="h-6 w-6 text-primary" />
-                    </div>
-                  </div>
-
-                  <div className="flex-1 space-y-1">
-                    <h3 className="font-semibold text-lg capitalize">{adress.city}</h3>
-
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Home className="h-6 w-6" />
-                      <span>{adress.details}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Phone className="h-6 w-6" />
-                      <span>{adress.phone}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className=" bg-red-100 p-2 px-2 border border-red-300 hover:bg-red-600 rounded-lg group cursor-pointer transition-colors duration-150">
-              <svg onClick={() => { mutate(adress._id) }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5 cursor-pointer text-red-600 transition-colors duration-150 group-hover:text-white">
-              <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clipRule="evenodd" />
-              </svg>
-              </div>
-                    
-                    {/* <button onClick={() => { mutate(adress._id) }} className="text-red-500 hover:text-red-700 p-2 bg-red-50 rounded-lg transition-colors duration-200">
-                      delete address
-                    </button> */}
+            return (
+              <div key={adress._id} className="flex items-start justify-between gap-4 p-4 rounded-[14px] border border-[rgba(28,25,20,0.12)] bg-[rgba(255,252,247,0.78)]">
+                <div className="flex-1 min-w-0">
+                  <div className="grid gap-1 text-sm text-[rgba(28,25,20,0.58)]">
+                    <span className="text-lg font-bold text-black">{adress.name}</span>
+                    <span><strong className="font-semibold text-[rgba(28,25,20,0.78)]">name:</strong> {adress.name}</span>
+                    <span><strong className="font-semibold text-[rgba(28,25,20,0.78)]">details:</strong> {adress.details}</span>
+                    <span><strong className="font-semibold text-[rgba(28,25,20,0.78)]">phone:</strong> {adress.phone}</span>
+                    <span><strong className="font-semibold text-[rgba(28,25,20,0.78)]">city:</strong> {adress.city}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <button
+                  onClick={() => { mutate(adress._id) }}
+                  className="flex-shrink-0 text-xs font-semibold px-3 py-2 rounded-[10px] bg-[rgba(255,252,247,0.75)] border border-[rgba(28,25,20,0.12)] text-[rgba(28,25,20,0.55)] cursor-pointer transition-all hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            )
           })}
-
-
         </div>
       </div>
     </div>
