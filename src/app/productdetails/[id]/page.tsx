@@ -247,9 +247,7 @@ export default function Productdetails() {
               <div className="flex-1">
                 {singleproduct?._id && <AddBTN id={singleproduct._id} data={[]} />}
               </div>
-              <button className="size-12 flex items-center justify-center rounded-[14px] border border-[#1c1914]/12 bg-[#fffcf7]/75 text-[#1c1914] hover:bg-[#0e8528]/10 hover:border-[#0e8528] transition-all">
-                <Heart className="size-5" />
-              </button>
+              
             </div>
 
             {/* Timeline Metadata */}
