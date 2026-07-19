@@ -1,38 +1,12 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useWishlist } from '../_servecies/wishlist/getWishlist'
 import Loading from '../loading';
 import { ProductCard } from '../_components/ProductCard/ProductCard';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import Link from 'next/link';
 
 export default function Wishlist() {
   const { data, isLoading, error } = useWishlist()
-  const headerRef = useRef(null);
-  
-  useGSAP(() => {
-   
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: -30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-      );
-
-      gsap.fromTo(
-        '.wishlist-card',
-        { opacity: 0, y: -50 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.6, 
-          stagger: 0.3, 
-          ease: 'power3.out',
-          delay: 0.3
-        }
-      );
-    
-  });
   
   if(isLoading){
     return <Loading/>
@@ -42,84 +16,56 @@ export default function Wishlist() {
   const hasItems = wishlistItems.length > 0;
   
   return (
-    <div className="min-h-screen bg-main px-4 py-12">
-      <div className="max-w-7xl bg-white py-3 rounded-2xl mx-auto">
-        <div ref={headerRef} className="text-center mb-12">
-          <div className="inline-block mb-4">
-            <div className="relative">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-800">
-                My Wishlist
-              </h1>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#f6f1e8] px-4 py-12">
+      <div className="max-w-7xl mx-auto">
 
         {hasItems ? (
-          <div className="bg-white rounded-2xl  p-6 md:p-8 border border-gray-100">
+          <>
+            <div className="flex items-end justify-between gap-3 mb-8 pb-4 border-b border-[#1c1914]/10">
+              <h1 className="font-serif text-2xl md:text-3xl font-[620] tracking-tight text-[#1c1914]">
+                Saved items
+              </h1>
+              <span className="text-xs text-[#1c1914]/55 font-medium">
+                {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {wishlistItems.map((prod:any) => (
-                <div key={prod.id} className="wishlist-card">
+                <div key={prod.id || prod._id}>
                   <ProductCard prod={prod} />
                 </div>
               ))}
             </div>
-          </div>
+          </>
         ) : (
-          <div className="bg-white rounded-2xl  p-12 md:p-16 text-center border border-gray-100">
-            <div className="max-w-md mx-auto">
-              <div className="mb-6">
-                <svg 
-                  className="w-32 h-32 mx-auto text-gray-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={1.5} 
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
-                  />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-3">
-                Your Wishlist is Empty
-              </h3>
-              <p className="text-gray-500 mb-8">
-                Explore our products and save your favorites here for later!
+          <div className="flex flex-col items-center justify-center min-h-[520px] text-center px-8">
+            <div className="max-w-[420px]">
+              <div className="h-[220px] w-[260px] mx-auto mb-6 rounded-[22px] bg-gradient-to-br from-[#f0e9e3] to-[#e6f0e5] border border-[#1c1914]/10" />
+              <h2 className="font-serif text-[1.7rem] font-[620] tracking-tight text-[#1c1914] mb-3">
+                Your wishlist is empty
+              </h2>
+              <p className="text-[#1c1914]/60 mb-8 leading-relaxed text-[15px]">
+                Save products while browsing and they will show up here.
               </p>
-              <Link 
-                href="/" 
-                className="inline-flex items-center gap-2 bg-main hover:bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+              <Link
+                href="/"
+                className="inline-block bg-main text-white font-bold px-7 py-3.5 rounded-xl shadow-[0_20px_40px_rgba(14,133,40,0.2)] hover:shadow-[0_24px_48px_rgba(14,133,40,0.28)] transition-all duration-200 hover:-translate-y-0.5 text-sm"
               >
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" 
-                  />
-                </svg>
-                Start Shopping
+                Browse favorites
               </Link>
             </div>
           </div>
         )}
 
-        {/* Error State */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+          <div className="mt-8 bg-red-50/80 border border-red-200/60 rounded-xl p-6 text-center backdrop-blur-sm">
             <p className="text-red-600 font-medium">
               Oops! Something went wrong loading your wishlist.
             </p>
             <button 
               onClick={() => window.location.reload()} 
-              className="mt-4 text-red-600 underline hover:text-red-700"
+              className="mt-4 text-red-600 underline underline-offset-2 hover:text-red-700 text-sm font-medium"
             >
               Try again
             </button>

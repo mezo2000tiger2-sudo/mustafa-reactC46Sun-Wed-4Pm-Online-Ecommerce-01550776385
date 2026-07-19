@@ -1,105 +1,62 @@
-import React from 'react'
-import userIMG from '../../assets/images/user.jpg'
-import Loading from '../loading'
 import { cookies } from 'next/headers'
 import { decode } from 'next-auth/jwt'
-import Image from 'next/image'
 import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
 
 export default async function profile() {
     const cookieStore = await cookies()
     const authToken = cookieStore.get('__Secure-next-auth.session-token')?.value || 
                       cookieStore.get('next-auth.session-token')?.value
     
-    const token =await decode({
-        token:authToken,
-        secret:process.env.NEXTAUTH_SECRET!
+    const token = await decode({
+        token: authToken,
+        secret: process.env.NEXTAUTH_SECRET!
     })
     const user = token?.user
-    const userToken = token?.token
-    console.log(user);
-  return (
-   <>
-   <div className="min-h-screen bg-main pt-16 px-4 pb-8">
-  <div className="max-w-md mx-auto bg-white dark:bg-gray-900 rounded-3xl overflow-hidden shadow-xl">
-    
-    <div className="pt-12 pb-8 px-2 md:px-8">
-      <div className="text-center">
-        <div className="relative inline-block mb-6">
-          <Image 
-            width={120} 
-            height={120} 
-            className="h-30 w-30 rounded-full border-4 border-gray-100 dark:border-gray-800 shadow-lg object-cover" 
-            src={userIMG} 
-            alt='userIMG' 
-          />
+    const initial = user?.name?.charAt(0)?.toUpperCase() || 'U'
+
+    return (
+        <div className="min-h-screen bg-[#f6f1e8] pt-16 pb-8">
+            <div className="max-w-[420px] mx-auto px-4 py-12">
+                <div className="bg-[rgba(255,252,247,0.88)] rounded-[18px] border border-[#1c1914]/10 p-6 sm:p-8 text-center shadow-[0_12px_32px_rgba(28,25,20,0.07)]">
+                    <div className="w-24 h-24 rounded-full mx-auto mb-3.5 border-[3px] border-[rgba(255,252,247,0.95)] shadow-[0_14px_30px_rgba(28,25,20,0.12)] bg-[radial-gradient(circle_at_30%_30%,#f3e9dc,#c9ddcc)] flex items-center justify-center">
+                        <span className="text-2xl font-bold text-[#1c1914]/60">{initial}</span>
+                    </div>
+
+                    <h1 className="font-serif text-2xl font-semibold tracking-tight text-[#1c1914]">
+                        {user?.name}
+                    </h1>
+
+                    <p className="text-[#1c1914]/45 text-sm mt-2 mb-6">
+                        {user?.email}
+                    </p>
+
+                    <div className="text-left space-y-2.5">
+                        <Link
+                            href="/addresses"
+                            className="flex items-center justify-between p-3 rounded-xl border border-[#1c1914]/10 bg-[rgba(255,252,247,0.75)] font-semibold text-sm text-[#1c1914] no-underline transition-all duration-200 hover:border-[#0e8528]/30 hover:shadow-[0_8px_22px_rgba(14,133,40,0.1)]"
+                        >
+                            <span>Addresses</span>
+                            <span className="text-[#1c1914]/30">→</span>
+                        </Link>
+
+                        <Link
+                            href="/updatepassword"
+                            className="flex items-center justify-between p-3 rounded-xl border border-[#1c1914]/10 bg-[rgba(255,252,247,0.75)] font-semibold text-sm text-[#1c1914] no-underline transition-all duration-200 hover:border-[#0e8528]/30 hover:shadow-[0_8px_22px_rgba(14,133,40,0.1)]"
+                        >
+                            <span>Update password</span>
+                            <span className="text-[#1c1914]/30">→</span>
+                        </Link>
+
+                        <Link
+                            href="/updateuserdata"
+                            className="flex items-center justify-between p-3 rounded-xl border border-[#1c1914]/10 bg-[rgba(255,252,247,0.75)] font-semibold text-sm text-[#1c1914] no-underline transition-all duration-200 hover:border-[#0e8528]/30 hover:shadow-[0_8px_22px_rgba(14,133,40,0.1)]"
+                        >
+                            <span>Update data</span>
+                            <span className="text-[#1c1914]/30">→</span>
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <h1 className="font-bold text-3xl text-gray-900 dark:text-white mb-3">
-          {user.name}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-base mb-8">
-          {user.email}
-        </p>
-
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl md:p-6 p-2 border border-gray-100 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Updates
-          </h2>
-          <Link href="/addresses">
-            <div className="flex items-center justify-between p-4 bg-green-100 mb-3 dark:bg-gray-900 rounded-xl hover:bg-green-200 dark:hover:bg-green-900/10 transition-all duration-200 cursor-pointer group">
-              <span className="text-green-500 font-medium group-hover:text-green-600">
-                Addresses
-              </span>
-              <svg 
-                className="w-5 h-5 text-green-500 group-hover:translate-x-1 transition-transform" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-          <Link href="/updatepassword">
-            <div className="flex items-center mb-3 justify-between p-4 bg-red-50 dark:bg-gray-900 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/10 transition-all duration-200 cursor-pointer group">
-              <span className="text-red-500 font-medium group-hover:text-red-600">
-                Update password
-              </span>
-              <svg 
-                className="w-5 h-5 text-red-500 group-hover:translate-x-1 transition-transform" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-
-          <Link href="/updateuserdata">
-            <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-gray-900 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/10 transition-all duration-200 cursor-pointer group">
-              <span className="text-red-500 font-medium group-hover:text-red-600">
-                Update Data
-              </span>
-              <svg 
-                className="w-5 h-5 text-red-500 group-hover:translate-x-1 transition-transform" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-          
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-   </>
-  )
+    )
 }

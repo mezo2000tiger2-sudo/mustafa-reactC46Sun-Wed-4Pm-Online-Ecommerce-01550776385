@@ -64,7 +64,7 @@ export default function forgetpassword() {
       })
       
       if (!resp.ok) {
-        toast.error('Server error. Please try again later.')
+        toast.error((await resp.json()).message || 'Server error. Please try again later.')
         setisLoading(false)
         return
       }

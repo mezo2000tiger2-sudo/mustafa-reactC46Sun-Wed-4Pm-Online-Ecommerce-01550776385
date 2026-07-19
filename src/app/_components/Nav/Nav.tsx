@@ -1,6 +1,4 @@
 'use client'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
@@ -13,13 +11,13 @@ import { useQuery } from '@tanstack/react-query'
 import { CartResponse } from '@/app/_type/cartResponseInterface'
 import { Spinner } from '@/components/ui/spinner'
 
-gsap.registerPlugin(useGSAP)
 export default function Nav() {
   const [navPadding, setnavPadding] = useState('p-5')
-  const { status, data } = useSession()
+  const { status, data: session } = useSession()
   const [isOpen, setisOpen] = useState(false)
   const pathName = usePathname()
-  const { data: cartData, isError, error, isLoading } = useQuery<CartResponse>({
+  
+  const { data: cartData } = useQuery<CartResponse>({
     queryFn: async () => {
       const resp = await fetch('/api/cart')
       if (!resp.ok) {
@@ -28,7 +26,8 @@ export default function Nav() {
       const payload = await resp.json()
       return payload
     },
-    queryKey: ['get-cart']
+    queryKey: ['get-cart'],
+    enabled: status === 'authenticated'
   })
 
   const navRef = useRef(null)
@@ -60,54 +59,6 @@ export default function Nav() {
     })
   }
 
-  function animatePhone() {
-    if (!isOpen) {
-      gsap.fromTo('.phoneAN', {
-        opacity: 0,
-        x: -80,
-        duration: 1,
-      }, {
-        x: 0,
-        opacity: 1,
-        ease: 'power4.out',
-        stagger: 0.1,
-      })
-    }
-  }
-
-  useGSAP(() => {
-    gsap.from('.AN', {
-      opacity: 0,
-      y: 50,
-      stagger: 0.1,
-      duration: 0.6,
-      ease: 'back(2.5)'
-    })
-  })
-
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (window.scrollY > 0) {
-            setnavPadding('p-2')
-          } else {
-            setnavPadding('p-6')
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -137,22 +88,22 @@ export default function Nav() {
             alt='logo'
             width={200}
             height={100}
-            className='AN w-32 sm:w-39 md:w-40 h-auto shrink'
+            className='w-32 sm:w-39 md:w-40 h-auto shrink'
           />
         </a>
 
         <div className='flex justify-center items-center gap-3 md:hidden'>
           <button
             ref={buttonToggleRef}
-            onClick={() => { setisOpen(!isOpen);  }}
+            onClick={() => setisOpen(!isOpen)}
             data-collapse-toggle="navbar-default"
             type="button"
-            className="inline-flex stroke-0 AN items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base hover:bg-neutral-secondary-soft hover:text-heading cursor-pointer"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base hover:bg-neutral-secondary-soft hover:text-heading cursor-pointer"
             aria-controls="navbar-default"
             aria-expanded="false"
           >
-            <span className="sr-only stroke-0">Open main menu</span>
-            <svg onClick={animatePhone} className="w-6 h-6 stroke-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 24 24">
+            <span className="sr-only">Open main menu</span>
+            <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" strokeLinecap="round" strokeWidth={2} d="M5 7h14M5 12h14M5 17h14" />
             </svg>
           </button>
@@ -177,7 +128,7 @@ export default function Nav() {
             {path.map((elm) => {
               return (
                 <li key={elm.content}>
-                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
+                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
                     {elm.content}
                   </Link>
                 </li>
@@ -188,7 +139,7 @@ export default function Nav() {
             {status !== 'authenticated' && authPath.map((elm) => {
               return (
                 <li key={elm.content}>
-                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
+                  <Link href={elm.href} onClick={() => setisOpen(false)} className={`${chekPathName(elm.href)} block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
                     {elm.content}
                   </Link>
                 </li>
@@ -204,7 +155,7 @@ export default function Nav() {
             {status !== 'authenticated' && authPath.map((elm) => {
               return (
                 <li key={elm.content}>
-                  <Link href={elm.href} className={`${chekPathName(elm.href)} phoneAN AN block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
+                  <Link href={elm.href} className={`${chekPathName(elm.href)} block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 whitespace-nowrap`}>
                     {elm.content}
                   </Link>
                 </li>
@@ -215,7 +166,7 @@ export default function Nav() {
 
           {status == 'authenticated' && (
             <Link href={'/cart'} className='relative'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-7 AN">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-7">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
               </svg>
               <Badge className='absolute -top-3.5 -right-4'>
