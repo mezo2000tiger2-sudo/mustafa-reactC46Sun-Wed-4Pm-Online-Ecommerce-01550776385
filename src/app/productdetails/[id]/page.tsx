@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Loading from '@/app/loading'
 import { verifyToken } from '@/app/_servecies/orders/verifytoken'
+import { useWishlist } from '@/app/_servecies/wishlist/getWishlist'
 import { UpdateReview } from '@/app/_components/_updateAndDeleteRevie/UpdateReview/UpdateReview'
 import DeleteReview from '@/app/_components/_updateAndDeleteRevie/DeleteReview/DeleteReview'
 import { Button } from "@/components/ui/button"
@@ -74,6 +75,8 @@ export default function Productdetails() {
       return payload.data
     },
   })
+
+  const { data: wishlistData } = useWishlist()
 
   const { isLoading: verefyLoading, data: verefy } = useQuery({
     queryKey: ['verify', id],
@@ -245,7 +248,7 @@ export default function Productdetails() {
                   <button className="px-3 py-2 font-extrabold bg-[#f6f1e8]/40 hover:bg-[#f6f1e8]/80 border-l border-[#1c1914]/12">+</button>
               </div>
               <div className="flex-1">
-                {singleproduct?._id && <AddBTN id={singleproduct._id} data={[]} />}
+                {singleproduct?._id && <AddBTN id={singleproduct._id} data={wishlistData} />}
               </div>
               
             </div>
