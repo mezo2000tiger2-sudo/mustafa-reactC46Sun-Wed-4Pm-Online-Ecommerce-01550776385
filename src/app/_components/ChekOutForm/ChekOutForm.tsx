@@ -7,10 +7,9 @@ import { Controller, useForm } from 'react-hook-form'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { LoaderIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useQueryClient } from '@tanstack/react-query';
 import { shippingAddress } from '@/app/_type/cartResponseInterface';
 import { payCashOrder } from '@/app/_servecies/cart/pay_cash';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -27,7 +26,6 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
 
   async function payCash(cartid: string, shippingAddress: shippingAddress) {
     const resp = await payCashOrder(cartid, shippingAddress)
-    console.log(resp);
     if (resp.status === 'success') {
       toast.success('order placed successfully')
       router.push('/')
@@ -38,7 +36,6 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
   }
   async function payOnline(cartid: string, shippingAddress: shippingAddress) {
     const resp = await payOnlineOrder(cartid, shippingAddress)
-    console.log(resp);
     if (resp.status === 'success') {
       router.push(resp.session.url)
     } else {
@@ -48,14 +45,6 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
   }
 
 
-  const quaryclient = useQueryClient()
-
-
-  const callback = useSearchParams()
-  const callbackURL = callback.get('callback-url')
-  console.log(callbackURL);
-
-  const [chekPassword, setchekPassword] = useState('password')
   const [isLoading, setisLoading] = useState(false)
   const router = useRouter()
 
@@ -76,15 +65,20 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
     const shippingAddress = {
       ...values
     }
+    if (isLoading) return
     setisLoading(true)
-    if (cashOrVisa === 'cash') {
-
-      payCash(cartId, shippingAddress)
-    } else {
-      const { postalCode, ...data } = shippingAddress
-      payOnline(cartId, data as shippingAddress)
+    try {
+      if (cashOrVisa === 'cash') {
+        await payCash(cartId, shippingAddress)
+      } else {
+        const { details, phone, city } = shippingAddress
+        await payOnline(cartId, { details, phone, city })
+      }
+    } catch {
+      toast.error('Unable to place your order. Please try again.')
+    } finally {
+      setisLoading(false)
     }
-    setisLoading(false)
   }
 
 
@@ -99,12 +93,12 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
 
       <div className=" mx-auto p-5 w-full bg-white rounded-b-lg  overflow-hidden">
 
-        <RadioGroup defaultValue="cash" className="w-fit mb-3 flex  gap-3">
-          <div onClick={() => { setcashOrVisa('cash') }} className="flex items-center gap-3">
+        <RadioGroup value={cashOrVisa} onValueChange={setcashOrVisa} disabled={isLoading} className="w-fit mb-3 flex  gap-3">
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="cash" id="r1" />
             <Label htmlFor="r1">pay cash</Label>
           </div>
-          <div onClick={() => { setcashOrVisa('visa') }} className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <RadioGroupItem value="visa" id="r2" />
             <Label htmlFor="r2">pay visa</Label>
           </div>
@@ -142,7 +136,7 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
                   <div className="relative">
                     <Input
                       className='bg-white'
-                      type='number'
+                      type='tel'
                       {...field}
                       id={field.name}
                       aria-invalid={fieldState.invalid}
@@ -199,7 +193,7 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
 
           }
           <LocationDrawer onSelect={handleAddressSelect} />
-          <Button type='submit' className={`${isLoading && `opacity-80`} my-6 w-full`}>
+          <Button type='submit' disabled={isLoading} className={`${isLoading && `opacity-80`} my-6 w-full`}>
             {isLoading &&
 
               <LoaderIcon
