@@ -10,7 +10,7 @@ export async function PUT(req:NextRequest){
 
     try {
         const body = await req.json()
-        console.log('updatepassword body:', body)
+        
 
         const resp = await fetch(`https://ecommerce.routemisr.com/api/v1/users/changeMyPassword`,{
             method:'PUT',

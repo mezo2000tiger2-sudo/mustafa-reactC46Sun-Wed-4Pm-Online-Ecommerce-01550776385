@@ -47,7 +47,7 @@ export default function UpdateUserData() {
   )
   async function submitForm(values:zod.infer<typeof updateuserdataschema>){
     setisLoading(true)
-    console.log(values);
+    
     const resp =await fetch(`/api/updateuserdata`,{
       method:'PUT',
 
@@ -75,7 +75,7 @@ if(payload?.message == 'fail'){
     toast.error(payload.errors.msg)
 
 }
-console.log(payload);
+
 
     setisLoading(false)
     

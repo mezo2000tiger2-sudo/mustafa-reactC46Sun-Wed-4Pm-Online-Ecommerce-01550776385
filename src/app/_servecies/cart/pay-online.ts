@@ -40,6 +40,6 @@ export async function payOnlineOrder(cartid:string , shippingAddress:shippingAdd
   )
   
   const payload = await resp.json()
-  console.log(payload);
+  
   return payload
 } 

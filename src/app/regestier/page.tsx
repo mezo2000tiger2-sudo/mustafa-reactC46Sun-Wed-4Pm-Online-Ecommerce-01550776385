@@ -52,7 +52,7 @@ export default function regestier() {
   )
   async function submitForm(values:zod.infer<typeof Regestierschema>){
     setisLoading(true)
-    console.log(values);
+    
     const resp =await fetch(`https://ecommerce.routemisr.com/api/v1/auth/signup`,{
       method:'POST',
 
@@ -77,7 +77,7 @@ export default function regestier() {
       seterror(data.message)
     }
     setisLoading(false)
-    console.log(data);
+    
     
 
   }

@@ -30,7 +30,7 @@ export async function addAdressFn(adress:shippingAddress) {
         body: JSON.stringify(adress)
     })
     const payload = await resp.json()
-    console.log(payload);
+    
     return payload
 
 

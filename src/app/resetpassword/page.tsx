@@ -73,7 +73,7 @@ export default function forgetpassword() {
 })
 
 async function submitForm(values:zod.infer<typeof forgetPasswordShema>){
-  console.log(values);
+  
   resetPassword({ email: values.email, newPassword: values.newPassword })
 }
 

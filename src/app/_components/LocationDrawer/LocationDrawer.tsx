@@ -27,7 +27,7 @@ export function LocationDrawer({onSelect}:{onSelect:(adress:shippingAddress)=>vo
         queryFn: getAddresses
       })
       
-      console.log('addresses is: ', data);
+      
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -20,7 +20,7 @@ export default function Adresses() {
     mutationKey: ['del-addresses'],
     mutationFn: (adressId: string) => deleteAddress(adressId),
     onSuccess: (data) => {
-      console.log('Delete response:', data);
+      
       if (data.status === 'success') {
         toast.success('Address deleted successfully');
         quaryclient.invalidateQueries({
@@ -29,7 +29,7 @@ export default function Adresses() {
       }
     }
   })
-  console.log('addresses is: ', data);
+  
 
   if (isLoading) {
     return <Loading />
@@ -40,7 +40,7 @@ export default function Adresses() {
         <div className="flex items-center justify-between mb-6">
           <h4 className="font-[550] text-[1.25rem] tracking-tight">Saved addresses</h4>
           <Link href={'/addadress'}>
-            <Button onClick={() => { console.log("Add address clicked"); }} className="gap-2 text-end ">
+            <Button onClick={() => {  }} className="gap-2 text-end ">
               <Plus className="h-4 w-4" />
               Add Address
             </Button>

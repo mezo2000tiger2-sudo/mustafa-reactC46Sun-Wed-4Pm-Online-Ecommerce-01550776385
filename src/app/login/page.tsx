@@ -35,7 +35,7 @@ export default function Login() {
 
   const callback = useSearchParams()
   const callbackURL = callback.get('callback-url')
-  console.log(callbackURL);
+  
   
   const [chekPassword, setchekPassword] = useState('password')
 
@@ -58,7 +58,7 @@ export default function Login() {
   )
   async function submitForm(values:zod.infer<typeof Loginschema>){
     setisLoading(true)
-    console.log(values);
+    
     const resp = await signIn('credentials' , {
       email: values.email,
       password: values.password,
@@ -73,7 +73,7 @@ export default function Login() {
       toast.error('Invalid Email or Password')
 
     }
-    console.log(resp);
+    
         setisLoading(false)
   }
 

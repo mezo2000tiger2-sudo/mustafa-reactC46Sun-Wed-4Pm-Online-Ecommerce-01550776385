@@ -20,6 +20,6 @@ export async function resetPasswordFn({ email, newPassword }: ResetPasswordVaria
   }
 
   const payload = await resp.json();
-  console.log(payload);
+  
   return payload;
 }

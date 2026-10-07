@@ -34,7 +34,7 @@ if(!token){
         
     })
     const payload = await resp.json()
-    console.log(payload);
+    
     
     return payload
     

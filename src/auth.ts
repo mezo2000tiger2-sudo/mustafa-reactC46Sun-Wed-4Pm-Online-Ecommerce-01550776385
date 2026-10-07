@@ -27,7 +27,7 @@ export  const authOptions:NextAuthOptions={
                     }
                 })
                 const payload:FaildLogin | SuccessLogin =await resp.json()
-                console.log(payload);
+                
                 
                 if('token' in payload){
 
