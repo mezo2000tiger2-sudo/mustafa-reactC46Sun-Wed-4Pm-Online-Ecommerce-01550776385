@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req:NextRequest){
     const token =await getToken({req})
     if(!token){
-        return NextResponse.json({error:'unAuthorized' , stats:401})
+        return NextResponse.json({error:'unAuthorized'}, {status: 401})
 
     }
     const resp=await fetch(`https://ecommerce.routemisr.com/api/v2/cart`,{
@@ -15,6 +15,6 @@ export async function GET(req:NextRequest){
         }
     })
     const payload = await resp.json()
-    return NextResponse.json(payload)
+    return NextResponse.json(payload, {status: resp.status})
 
 }

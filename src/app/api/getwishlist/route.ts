@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req:NextRequest){
     const token =await getToken({req})
     if(!token){
-        return NextResponse.json({error:'unAuthorized' , stats:401})
+        return NextResponse.json({error:'unAuthorized'}, {status: 401})
 
     }
     try {
@@ -16,9 +16,9 @@ export async function GET(req:NextRequest){
         }
     })
     const payload = await resp.json()
-    return NextResponse.json(payload)
+    return NextResponse.json(payload, {status: resp.status})
     } catch (error) {
-        return NextResponse.json({error:'error'})
+        return NextResponse.json({error:'Internal server error'}, {status: 500})
     }
     
 
