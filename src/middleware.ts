@@ -2,12 +2,12 @@ import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 
 const protectedPages = ['/cart', '/profile', '/wishlist' , '/updatepassword' , '/UpdateuserData' , '/chekout' , '/allorders','/addresses','/addadress','/orderdetails']  
-const authPages = ['/login', '/register' ,'/forgetpassword' ,'/verefyresetcode','/resetpassword']  
+const authPages = ['/login', '/regestier' ,'/forgetpassword' ,'/verefyresetcode','/resetpassword']  
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req })
   
-  if(protectedPages.includes(req.nextUrl.pathname)){
+  if(protectedPages.some(page => req.nextUrl.pathname === page || req.nextUrl.pathname.startsWith(`${page}/`))){
     if(token){
       return NextResponse.next()
     } else {
