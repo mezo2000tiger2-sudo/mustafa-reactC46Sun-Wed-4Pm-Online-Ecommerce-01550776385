@@ -51,7 +51,7 @@ export default function VerefyResetCode() {
   )
   async function submitForm(values:zod.infer<typeof verefyResetCodeSchema>){
     setisLoading(true)
-    console.log(values);
+    
     const resp =await fetch(`https://ecommerce.routemisr.com/api/v1/auth/verifyResetCode`,{
       method:'POST',
 

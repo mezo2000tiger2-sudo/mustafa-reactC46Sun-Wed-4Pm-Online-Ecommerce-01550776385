@@ -51,7 +51,7 @@ export default function forgetpassword() {
   )
   async function submitForm(values:zod.infer<typeof forgetPasswordShema>){
     setisLoading(true)
-    console.log(values);
+    
     try {
       const resp =await fetch(`https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords`,{
         method:'POST',

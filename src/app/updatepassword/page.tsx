@@ -50,7 +50,7 @@ export default function UpdatePassword() {
   )
   async function submitForm(values:zod.infer<typeof UpdatePasswordShema>){
     setisLoading(true)
-    console.log(values);
+    
     const resp =await fetch(`/api/updatepassword`,{
       method:'PUT',
 

@@ -27,7 +27,7 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
 
   async function payCash(cartid: string, shippingAddress: shippingAddress) {
     const resp = await payCashOrder(cartid, shippingAddress)
-    console.log(resp);
+    
     if (resp.status === 'success') {
       toast.success('order placed successfully')
       router.push('/')
@@ -38,7 +38,7 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
   }
   async function payOnline(cartid: string, shippingAddress: shippingAddress) {
     const resp = await payOnlineOrder(cartid, shippingAddress)
-    console.log(resp);
+    
     if (resp.status === 'success') {
       router.push(resp.session.url)
     } else {
@@ -53,7 +53,7 @@ export default function ChekOutForm({ cartId }: { cartId: string }) {
 
   const callback = useSearchParams()
   const callbackURL = callback.get('callback-url')
-  console.log(callbackURL);
+  
 
   const [chekPassword, setchekPassword] = useState('password')
   const [isLoading, setisLoading] = useState(false)

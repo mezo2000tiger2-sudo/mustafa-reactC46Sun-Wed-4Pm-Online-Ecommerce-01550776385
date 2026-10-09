@@ -46,7 +46,7 @@ export function AddReview({ productid }:{productid:string}) {
     mutationKey: ["add-addReview"],
     mutationFn: addReview,
     onSuccess(data) {
-        console.log('data',data);
+        
         if(data.message == 'fail'){
             toast.error(data.errors.msg)
         }else{
