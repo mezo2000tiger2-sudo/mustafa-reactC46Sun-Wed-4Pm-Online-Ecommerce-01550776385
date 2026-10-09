@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function PUT(req:NextRequest){
     const token =await getToken({req})
     if(!token){
-        return NextResponse.json({error:'unAuthorized' , stats:401})
+        return NextResponse.json({error:'unAuthorized'}, {status: 401})
 
     }
 

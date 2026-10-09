@@ -13,6 +13,6 @@ export async function PUT(req:NextRequest){
         })
 
         const payload = await resp.json() 
-         return NextResponse.json(payload)
+         return NextResponse.json(payload, {status: resp.status})
 
 }
